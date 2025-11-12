@@ -1,4 +1,7 @@
 import customtkinter as ctk
+import json
+
+data = json.load(open("local_storage.json", "r"))
 
 def toggle_dark_mode() -> None:
     global is_dark_mode
@@ -8,13 +11,18 @@ def toggle_dark_mode() -> None:
         ctk.set_appearance_mode("dark")
     is_dark_mode = not is_dark_mode
 
+def set_theme() -> None:
+    ...
+    # change data to match the theme and commit IMMEDIATELY
+
 app = ctk.CTk()
 app.title("Hello World")
 app.geometry("360x640")
 
 is_dark_mode = True
+theme = data["theme"]
 ctk.set_appearance_mode("dark")
-ctk.set_default_color_theme("green")
+ctk.set_default_color_theme(theme)
 
 label = ctk.CTkLabel(app, text="Hello World!", font=("Courier New", 20))
 label.grid(column=0, row=0)
