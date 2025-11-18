@@ -3,6 +3,7 @@
     "type": "object",
     "properties": {
         "$schema": {"type": "string"},
+        "id": {"type": "integer"},
         "@Exams": {
             "type": "object",
             "patternProperties": {
@@ -14,7 +15,8 @@
                             "datetime": {"type": "string", "description": "In format YYYY-MM-DDTHH:MM+00:00"},
                             "room": {"type": "string"},
                             "seat": {"type": "string"}
-                        }
+                        },
+                        "required": ["datetime", "room", "seat"]
                     }
                 }
             }
@@ -30,8 +32,10 @@
                     "teacher_name": {"type": "string"},
                     "room": {"type": "string"},
                     "daytime": {"type": "string", "description": "In format DDD-HH:MM-HH:MM where DDD is mon, tue etc and others are start and end time"}
-                }
+                },
+                "required": ["room", "daytime"]
             }
         }
-    }
+    },
+    "required": ["$schema", "id"]
 }
