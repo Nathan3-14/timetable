@@ -4,7 +4,7 @@
     "properties": {
         "$schema": {"type": "string"},
         "id": {"type": "integer"},
-        "@Exams": {
+        "Exams": {
             "type": "object",
             "patternProperties": {
                 "[a-zA-Z]+": {
@@ -20,20 +20,23 @@
                     }
                 }
             }
-        }
-    },
-    "patternProperties": {
-        "[a-zA-Z]+": {
-            "description": "One subject and its lessons",
-            "type": "array",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "teacher_name": {"type": "string"},
-                    "room": {"type": "string"},
-                    "daytime": {"type": "string", "description": "In format DDD-HH:MM-HH:MM where DDD is mon, tue etc and others are start and end time"}
-                },
-                "required": ["room", "daytime"]
+        },
+        "Subjects": {
+            "type": "object",
+            "patternProperties": {
+                "[a-zA-Z]+": {
+                    "description": "One subject and its lessons",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "teacher_name": {"type": "string"},
+                            "room": {"type": "string"},
+                            "daytime": {"type": "string", "description": "In format DDD-HH:MM-HH:MM where DDD is mon, tue etc and others are start and end time"}
+                        },
+                        "required": ["room", "daytime"]
+                    }
+                }
             }
         }
     },

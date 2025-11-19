@@ -1,14 +1,16 @@
 {
     "id": 100100,
     "$schema": "./timetable.schema.json",
-    "Maths": [
-        {"teacher_name": "a", "daytime": "MON-10:00-11:30", "room": "B112"}
-    ],
-    "Physics": [
-        {"teacher_name": "b", "daytime": "MON-11:30-12:15", "room": "B212"},
-        {"teacher_name": "b", "daytime": "MON-13:00-13:45", "room": "B212"}
-    ],
-    "@Exams": {
+    "Subjects": {
+        "Maths": [
+            {"teacher_name": "a", "daytime": "MON-10:00-11:30", "room": "B112"}
+        ],
+        "Physics": [
+            {"teacher_name": "b", "daytime": "MON-11:30-12:15", "room": "B212"},
+            {"teacher_name": "b", "daytime": "MON-13:00-13:45", "room": "B212"}
+        ]
+    },
+    "Exams": {
         "Maths": [
             {"datetime": "2025-12-12T09:00+00:00", "room": "E1", "seat": "10"}
         ],
