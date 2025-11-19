@@ -1,0 +1,35 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$defs": {
+        "lesson_array": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "subject": {"type": "string"},
+                    "teacher_name": {"type": "string"},
+                    "room": {"type": "string"},
+                    "time": {"type": "string", "description": "In format HH:MM-HH:MM, the start and end times"}
+                },
+                "required": ["subject", "room", "time"]
+            }
+        }
+    },
+    "type": "object",
+    "properties": {
+        "$schema": {"type": "string"},
+        "id": {"type": "integer"},
+        "lessons": {
+            "type": "object",
+            "properties": {
+                "MON": {"$ref": "#/$defs/lesson_array"},
+                "TUE": {"$ref": "#/$defs/lesson_array"},
+                "WED": {"$ref": "#/$defs/lesson_array"},
+                "THU": {"$ref": "#/$defs/lesson_array"},
+                "FRI": {"$ref": "#/$defs/lesson_array"}
+            },
+            "required": ["MON", "TUE", "WED", "THU", "FRI"]
+        }
+    },
+    "required": ["$schema", "id"]
+}

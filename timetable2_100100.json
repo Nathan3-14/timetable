@@ -1,0 +1,16 @@
+{
+    "$schema": "./timetable2.schema.json",
+    "id": 100100,
+    "lessons": {
+        "MON": [
+            {"subject": "maths", "teacher_name": "Mr Barret", "time": "10:00-11:30", "room": "B112"}
+        ],
+        "TUE": [
+            {"subject": "physics", "teacher_name": "Mrs Jones", "time": "11:30-12:15", "room": "B212"},
+            {"subject": "physics", "teacher_name": "Mrs Jones", "time": "13:00-13:45", "room": "B212"}
+        ],
+        "WED": [],
+        "THU": [],
+        "FRI": []
+    }
+}
