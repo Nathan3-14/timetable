@@ -38,6 +38,7 @@
             cairo
             gdk-pixbuf
             glib
+            glib-networking
             gtk3
             harfbuzz
             librsvg
@@ -47,6 +48,7 @@
             openssl
             wasm-bindgen-cli
             lld_20
+            xdotool
           ];
           nativeBuildInputs = with pkgs; [
             pkg-config

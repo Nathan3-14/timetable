@@ -1,0 +1,45 @@
+@use "./reset.scss";
+@use "./ctp.scss";
+
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
+body {
+  background: var(--mantle);
+  color: var(--text);
+
+  font-family: Montserrat, system-ui;
+  font-weight: 600;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 100dvh;
+}
+
+#root {
+  height: calc(16 * 10 * 4);
+  aspect-ratio: 9 / 18.5;
+
+  background: var(--crust);
+
+  overflow: hidden;
+
+  &.test-appearance {
+    border: 2px solid var(--blue);
+    border-radius: 20px;
+  }
+}
+
+#content {
+  --contentOuterMargin: 10px;
+  height: calc(100% - (2 * var(--contentOuterMargin)));
+  margin: 10px;
+  border-radius: 9px;
+
+  background: var(--red);
+}
+
+#navbar {
+  background: var(--overlay1);
+}
