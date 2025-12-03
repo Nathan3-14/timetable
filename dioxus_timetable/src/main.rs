@@ -10,12 +10,15 @@ fn main() {
 fn App() -> Element {
     rsx! {
         document::Stylesheet { href: CSS }
-        div { id: "root", class: "test-appearance",
-            div { id: "content",
-                h1 { "Hello!" }
+        div { id: "content",
+            h1 { "Hello" }
+            for _ in 0..100 {
+                br {}
+                "hello"
             }
-
-            div { id: "navbar" }
+            div { id: "bottom-padding" }
         }
+
+        div { id: "navbar" }
     }
 }
