@@ -1,22 +1,29 @@
 {
+    "$schema": "./timetable2.schema.json",
     "id": 100100,
-    "$schema": "./timetable.schema.json",
-    "Subjects": {
-        "Maths": [
-            {"teacher_name": "a", "daytime": "MON-10:00-11:30", "room": "B112"}
+    "lessons": {
+        "MON": [
+            {"subject": "maths", "teacher_name": "Mr Barret", "time": "10:15-11:15", "room": "B112"},
+            {"subject": "english", "teacher_name": "Mr Smith", "time": "11:15-12:15", "room": "A21"},
+            {"subject": "rpe", "teacher_name": "Ms Carrel", "time": "14:00-15:00", "room": "C102"}
         ],
-        "Physics": [
-            {"teacher_name": "b", "daytime": "MON-11:30-12:15", "room": "B212"},
-            {"teacher_name": "b", "daytime": "MON-13:00-13:45", "room": "B212"}
-        ]
-    },
-    "Exams": {
-        "Maths": [
-            {"datetime": "2025-12-12T09:00+00:00", "room": "E1", "seat": "10"}
+        "TUE": [
+            {"subject": "english", "teacher_name": "Mr Smith", "time": "09:00-10:00", "room": "A21"},
+            {"subject": "physics", "teacher_name": "Mrs Jones", "time": "11:15-12:15", "room": "B212"},
+            {"subject": "core maths", "teacher_name": "Mr Accel", "time": "13:00-14:00", "room": "B122"}
         ],
-        "Physics": [
-            {"datetime": "2025-12-10T12:30+00:00", "room": "E2", "seat": "41"},
-            {"datetime": "2025-12-11T09:00+00:00", "room": "E2", "seat": "41"}
+        "WED": [
+            {"subject": "maths", "teacher_name": "Mr Barret", "time": "09:00-10:00", "room": "B112"},
+            {"subject": "english", "teacher_name": "Mr Smith", "time": "14:00-15:00", "room": "A21"}
+        ],
+        "THU": [
+            {"subject": "core maths", "teacher_name": "Mr Accel", "time": "10:15-11:15", "room": "B122"},
+            {"subject": "maths", "teacher_name": "Mr Barret", "time": "11:15-12:15", "room": "B112"},
+            {"subject": "physics", "teacher_name": "Mrs Jones", "time": "14:00-15:00", "room": "B212"}
+        ],
+        "FRI": [
+            {"subject": "physics", "teacher_name": "Mrs Jones", "time": "10:15-11:15", "room": "B212"},
+            {"subject": "core maths", "teacher_name": "Mr Accel", "time": "13:00-14:00", "room": "B122"}
         ]
     }
 }
