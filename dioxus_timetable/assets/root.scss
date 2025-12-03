@@ -1,0 +1,22 @@
+@use "./reset.scss";
+@use "./ctp.scss";
+
+@use "./components/components.scss";
+@use "./pages/pages.scss";
+
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
+html,
+body {
+  padding: 0;
+}
+
+body {
+  background: var(--mantle);
+  color: var(--text);
+
+  font-family: Montserrat, system-ui;
+  font-weight: 600;
+
+  overflow: hidden;
+}

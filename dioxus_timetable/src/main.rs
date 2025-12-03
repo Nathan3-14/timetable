@@ -1,24 +1,22 @@
+mod components;
+mod pages;
+
+use crate::components::*;
+use crate::pages::*;
 use dioxus::prelude::*;
 
-static CSS: Asset = asset!("/assets/main.scss");
-
-fn main() {
-    dioxus::launch(App);
+#[derive(Routable, Clone, PartialEq)]
+enum Route {
+    #[layout(Navbar)]
+    #[route("/")]
+    Timetable,
 }
 
-#[component]
-fn App() -> Element {
-    rsx! {
-        document::Stylesheet { href: CSS }
-        div { id: "content",
-            h1 { "Hello" }
-            for _ in 0..100 {
-                br {}
-                "hello"
-            }
-            div { id: "bottom-padding" }
+fn main() {
+    dioxus::launch(|| {
+        rsx! {
+            document::Stylesheet { href: asset!("/assets/root.scss") }
+            Router::<Route> {}
         }
-
-        div { id: "navbar" }
-    }
+    });
 }

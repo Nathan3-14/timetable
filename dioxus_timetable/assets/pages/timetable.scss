@@ -1,0 +1,18 @@
+#content {
+  height: 101dvh;
+  width: 100%;
+  overflow-y: scroll;
+
+  padding: 20px;
+  background: none;
+}
+
+// so that the timetable can always be scrolled into view
+#bottom-padding {
+  height: 100px;
+  background: transparent;
+}
+
+#main-title {
+  text-align: center;
+}

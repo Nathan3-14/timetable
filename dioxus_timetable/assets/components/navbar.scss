@@ -1,0 +1,13 @@
+#navbar {
+  background: color-mix(in oklab, var(--surface1) 75%, transparent);
+  /* mix-blend-mode: color-burn; */
+  backdrop-filter: blur(1.5px) saturate(150%) contrast(200%);
+
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  width: 100%;
+  height: 70px;
+}
