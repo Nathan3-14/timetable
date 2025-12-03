@@ -1,5 +1,5 @@
 {
-    "$schema": "./timetable2.schema.json",
+    "$schema": "./timetable.schema.json",
     "id": 100100,
     "lessons": {
         "MON": [
