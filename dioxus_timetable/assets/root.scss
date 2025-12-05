@@ -1,10 +1,11 @@
 @use "./reset.scss";
-@use "./ctp.scss";
+@use "./macchiato.scss";
 
-@use "./components/components.scss";
+/* @use "./components/components.scss"; */
 @use "./pages/pages.scss";
 
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cascadia+Code:ital,wght@0,200..700;1,200..700&display=swap");
 
 html,
 body {

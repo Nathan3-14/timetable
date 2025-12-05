@@ -2,6 +2,7 @@
   height: 101dvh;
   width: 100%;
   overflow-y: scroll;
+  overflow-x: hidden;
 
   padding: 20px;
   background: none;
@@ -15,4 +16,39 @@
 
 #main-title {
   text-align: center;
+
+  margin-bottom: 30px;
+}
+
+#grid-container {
+  --time-col-width: 50px;
+  display: grid;
+  grid-template-columns: var(--time-col-width) 1fr;
+  height: calc(100px * 10);
+}
+
+#times {
+  display: grid;
+  grid-template-rows: repeat(1fr, 20);
+}
+
+p#time {
+  font-family: "Cascadia Code";
+  font-size: 15px;
+  position: relative;
+
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
+
+  &::after {
+    content: "";
+    position: absolute;
+    width: 100000px;
+    height: 1px;
+    background: var(--overlay0);
+    left: var(--time-col-width);
+    top: 10px;
+  }
 }

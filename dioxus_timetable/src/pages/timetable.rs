@@ -2,14 +2,26 @@ use dioxus::prelude::*;
 
 #[component]
 pub fn Timetable() -> Element {
+    let mut times: Vec<String> = Vec::new();
+
+    for hour in 8..18 {
+        let text: String = format!("{0:0>2}", hour.to_string()) + ":00";
+        times.push(text);
+    }
+
     rsx! {
         document::Stylesheet { href: asset!("/assets/pages/timetable.scss") }
         div { id: "content",
             h1 { id: "main-title", "Timetable" }
-            for _ in 0..100 {
-                br {}
-                "hello"
+
+            div { id: "grid-container",
+                div { id: "times",
+                    for time in times {
+                        p { id: "time", "{time}" }
+                    }
+                }
             }
+
             div { id: "bottom-padding" }
         }
     }
