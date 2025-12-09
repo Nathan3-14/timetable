@@ -25,15 +25,15 @@ pub fn LessonEl(lesson: Lesson) -> Element {
         return rsx! {};
     }
 
-    let start_time = &times[0];
-    let end_time = &times[1];
+    let start_times: Vec<String> = times[0].split(":").map(|x| x.to_string()).collect();
+    let end_times: Vec<String> = times[1].split(":").map(|x| x.to_string()).collect();
 
     rsx! {
         div { id: "lesson", background_color: "var(--red)",
             h1 { id: "lesson__subject-name", "{lesson.subject}" }
             p { id: "lesson__teacher-name", "{lesson.teacher_name}" }
             p { id: "lesson__room", "{lesson.room}" }
-            p { id: "lesson__time", "from {start_time} to {end_time}" }
+            p { id: "lesson__time", "from {start_times:#?} to {end_times:#?}" }
         }
     }
 }
@@ -49,6 +49,8 @@ fn main() {
     dioxus::launch(|| {
         rsx! {
             document::Stylesheet { href: asset!("/assets/root.scss") }
+            document::Link { rel: "icon", href: "data:," }
+            document::Title { "Timetable" }
             Router::<Route> {}
         }
     });

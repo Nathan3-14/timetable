@@ -9,7 +9,7 @@ pub fn Timetable() -> Element {
     let example_lesson: Lesson = Lesson {
         subject: "subject".to_string(),
         teacher_name: "teacher name".to_string(),
-        time: "time-time2".to_string(),
+        time: "9:00-10:30".to_string(),
         room: "room".to_string(),
     };
 
