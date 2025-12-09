@@ -4819,6 +4819,7 @@ name = "timetable"
 version = "0.1.0"
 dependencies = [
  "dioxus",
+ "serde",
  "wasm-bindgen",
 ]
 

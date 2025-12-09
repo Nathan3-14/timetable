@@ -29,7 +29,7 @@
 
 #times {
   display: grid;
-  grid-template-rows: repeat(1fr, 20);
+  grid-template-rows: repeat(9, 1fr) 10px;
 }
 
 p#time {
@@ -45,10 +45,32 @@ p#time {
   &::after {
     content: "";
     position: absolute;
-    width: 100000px;
+    width: 77dvw;
     height: 1px;
     background: var(--overlay0);
     left: var(--time-col-width);
     top: 10px;
+    z-index: -1;
   }
+}
+
+#lessons {
+  width: 100%;
+  height: calc(100% - 10px);
+  margin-top: 10px;
+  border-radius: 20px;
+
+  padding-inline: 10px;
+
+  display: grid;
+
+  // A row every 5 minutes
+  grid-template-rows: repeat(108, 1fr);
+}
+
+#lesson {
+  grid-row-start: calc(12 + 1);
+  grid-row-end: span calc(12 * (9 / 6));
+  border-radius: 10px;
+  width: 100%;
 }
