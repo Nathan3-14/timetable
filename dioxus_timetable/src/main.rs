@@ -21,6 +21,10 @@ pub fn LessonEl(lesson: Lesson) -> Element {
         .map(|time| time.to_string())
         .collect();
 
+    if times.len() != 2 {
+        return rsx! {};
+    }
+
     let start_time = &times[0];
     let end_time = &times[1];
 
@@ -29,7 +33,7 @@ pub fn LessonEl(lesson: Lesson) -> Element {
             h1 { id: "lesson__subject-name", "{lesson.subject}" }
             p { id: "lesson__teacher-name", "{lesson.teacher_name}" }
             p { id: "lesson__room", "{lesson.room}" }
-            p { id: "lesson__time", "{start_time} {end_time}" }
+            p { id: "lesson__time", "from {start_time} to {end_time}" }
         }
     }
 }

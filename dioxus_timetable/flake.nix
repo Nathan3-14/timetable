@@ -1,17 +1,21 @@
 {
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
     flake-parts.url = "github:hercules-ci/flake-parts";
     systems.url = "github:nix-systems/default";
   };
 
   outputs =
-    inputs:
+    inputs@{
+      self,
+      ...
+    }:
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
       systems = import inputs.systems;
       perSystem =
         {
           pkgs,
+          system,
           ...
         }:
         let
@@ -59,6 +63,11 @@
           ];
         in
         {
+          _module.args.pkgs = import self.inputs.nixpkgs {
+            inherit system;
+            config.allowUnfree = true;
+          };
+
           # Rust package
           packages.default = pkgs.rustPlatform.buildRustPackage {
             inherit (cargoToml.package) name version;
@@ -75,6 +84,7 @@
           devShells.default = pkgs.mkShell {
             RUST_BACKTRACE = "full";
             RUST_SRC_PATH = pkgs.rustPlatform.rustLibSrc;
+            ANDROID_NDK_HOME = "${pkgs.androidenv.androidPkgs.ndk-bundle}/libexec/android-sdk/ndk";
 
             packages =
               nativeBuildInputs
@@ -85,6 +95,7 @@
               ++ (with pkgs; [
                 clippy
                 dioxus-cli
+                androidenv.androidPkgs.ndk-bundle
               ]);
           };
 
