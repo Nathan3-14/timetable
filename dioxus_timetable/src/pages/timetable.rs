@@ -55,6 +55,7 @@ pub fn LessonEl(lesson: Lesson) -> Element {
     let start_times: Vec<String> = times[0].split(":").map(|x| x.to_string()).collect();
     let start_hour: i8 = start_times[0].parse::<i8>()?;
     let start_minute: i8 = start_times[1].parse::<i8>()?;
+    let start_display: String = format!("{start_hour}:{start_minute:0>2}");
 
     let mut grid_start: i8 = 1;
     grid_start += (start_hour - 8) * 12; // 12 rows per hour
@@ -63,6 +64,7 @@ pub fn LessonEl(lesson: Lesson) -> Element {
     let end_times: Vec<String> = times[1].split(":").map(|x| x.to_string()).collect();
     let end_hour: i8 = end_times[0].parse::<i8>()?;
     let end_minute: i8 = end_times[1].parse::<i8>()?;
+    let end_display: String = format!("{end_hour}:{end_minute:0>2}");
 
     let mut grid_span: i8 = 0;
     grid_span += (end_hour - start_hour) * 12;
@@ -77,7 +79,7 @@ pub fn LessonEl(lesson: Lesson) -> Element {
             h1 { id: "lesson__subject-name", "{lesson.subject}" }
             // p { id: "lesson__teacher-name", "{lesson.teacher_name}" }
             p { id: "lesson__room", "{lesson.room}" }
-            p { id: "lesson__time", "from {start_times:#?} to {end_times:#?}" }
+            p { id: "lesson__time", "{start_display} to {end_display}" }
         }
     }
 }
