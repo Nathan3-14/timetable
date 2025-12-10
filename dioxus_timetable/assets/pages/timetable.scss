@@ -80,7 +80,12 @@ p#time {
   line-height: 1.1;
 
   & > * {
-    /* mix-blend-mode: hard-light; */
-    mix-blend-mode: plus-darker;
+    @supports (mix-blend-mode: plus-darker) {
+      mix-blend-mode: plus-darker;
+    }
+
+    @supports not (mix-blend-mode: plus-darker) {
+      color: rgba(0, 0, 0, 0.7);
+    }
   }
 }
