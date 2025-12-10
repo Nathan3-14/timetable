@@ -33,7 +33,7 @@
 }
 
 p#time {
-  font-family: "Cascadia Code";
+  font-family: "Cascadia Code", system-ui;
   font-size: 15px;
   position: relative;
 
@@ -66,9 +66,11 @@ p#time {
 
   // A row every 5 minutes
   grid-template-rows: repeat(108, 1fr);
+  gap: 1px;
 }
 
 #lesson {
+  color: var(--overlay2);
   grid-row-start: calc(12 + 1);
   grid-row-end: span calc(12 * (9 / 6));
   width: 100%;
@@ -76,4 +78,9 @@ p#time {
 
   padding: 5px;
   line-height: 1.1;
+
+  & > * {
+    /* mix-blend-mode: hard-light; */
+    mix-blend-mode: plus-darker;
+  }
 }

@@ -1,15 +1,47 @@
 use dioxus::prelude::*;
+use rand::seq::IndexedRandom;
+use serde::Deserialize;
+use std::fs;
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Debug, Deserialize)]
 pub struct Lesson {
     subject: String,
-    teacher_name: String,
+    // teacher_name: String,
     time: String,
     room: String,
 }
 
+#[derive(Debug, Deserialize)]
+struct Lessons {
+    mon: Vec<Lesson>,
+    tue: Vec<Lesson>,
+    wed: Vec<Lesson>,
+    thu: Vec<Lesson>,
+    fri: Vec<Lesson>,
+}
+
+#[derive(Debug, Deserialize)]
+struct TimetableJSON {
+    id: isize,
+    lessons: Lessons,
+}
+
+#[server]
+pub async fn get_timetable_json() -> Result<String, ServerFnError> {
+    let timetable_json = fs::read_to_string("./timetable_100101.json").unwrap();
+    Ok(timetable_json)
+}
+
 #[component]
 pub fn LessonEl(lesson: Lesson) -> Element {
+    let colors: Vec<String> = [
+        "mauve", "red", "blue", "sapphire", "teal", "sky", "maroon", "green",
+    ]
+    .map(|x| x.to_string())
+    .to_vec();
+
+    let color: String = colors.choose(&mut rand::rng()).unwrap().to_string();
+
     let times: Vec<String> = lesson
         .time
         .split("-")
@@ -39,12 +71,12 @@ pub fn LessonEl(lesson: Lesson) -> Element {
     rsx! {
         div {
             id: "lesson",
-            background_color: "var(--mauve)",
+            background_color: "var(--{color})",
             grid_row_start: grid_start,
             grid_row_end: "span {grid_span}",
             h1 { id: "lesson__subject-name", "{lesson.subject}" }
-            p { id: "lesson__teacher-name", "{lesson.teacher_name}" }
-            p { id: "lesson__room", "{lesson.room} {start_hour} {start_minute} {grid_start}" }
+            // p { id: "lesson__teacher-name", "{lesson.teacher_name}" }
+            p { id: "lesson__room", "{lesson.room}" }
             p { id: "lesson__time", "from {start_times:#?} to {end_times:#?}" }
         }
     }
@@ -53,20 +85,25 @@ pub fn LessonEl(lesson: Lesson) -> Element {
 #[component]
 pub fn Timetable() -> Element {
     let mut times: Vec<String> = Vec::new();
+    for hour in 8..18 {
+        let text: String = format!("{0:0>2}", hour.to_string()) + ":00";
+        times.push(text);
+    }
 
     let example_lesson: Lesson = Lesson {
         subject: "subject".to_string(),
-        teacher_name: "teacher name".to_string(),
-        time: "9:30-11:30".to_string(),
+        // teacher_name: "teacher name".to_string(),
+        time: "09:15-11:30".to_string(),
         room: "room".to_string(),
     };
 
     let lessons: Vec<Lesson> = [example_lesson].to_vec();
 
-    for hour in 8..18 {
-        let text: String = format!("{0:0>2}", hour.to_string()) + ":00";
-        times.push(text);
-    }
+    let timetable_string = use_server_future(get_timetable_json)?;
+    let timetable: TimetableJSON =
+        serde_json::from_str(&timetable_string.unwrap().unwrap()).unwrap();
+
+    let lessons: Vec<Lesson> = timetable.lessons.wed.clone();
 
     rsx! {
         document::Stylesheet { href: asset!("/assets/pages/timetable.scss") }

@@ -1,6 +1,6 @@
 #navbar {
-  background: color-mix(in oklab, var(--surface1) 65%, transparent);
-  backdrop-filter: blur(1px);
+  background: color-mix(in oklab, var(--surface0) 65%, transparent);
+  backdrop-filter: blur(10px);
 
   position: fixed;
   bottom: 0;
