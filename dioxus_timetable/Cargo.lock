@@ -4882,6 +4882,7 @@ dependencies = [
 name = "timetable"
 version = "0.1.0"
 dependencies = [
+ "chrono",
  "dioxus",
  "getrandom 0.3.4",
  "rand 0.9.2",

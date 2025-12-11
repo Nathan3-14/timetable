@@ -1,7 +1,8 @@
+use chrono::Datelike;
+use chrono::Local;
 use dioxus::prelude::*;
 use rand::seq::IndexedRandom;
 use serde::Deserialize;
-use std::fs;
 
 #[derive(Clone, PartialEq, Debug, Deserialize)]
 pub struct Lesson {
@@ -26,19 +27,22 @@ struct TimetableJSON {
     lessons: Lessons,
 }
 
+#[derive(Clone, Copy)]
+struct CurrentLessons {
+    lessons: Signal<Vec<Lesson>>,
+}
+
 #[server]
 pub async fn get_timetable_json() -> Result<String, ServerFnError> {
-    let timetable_json = fs::read_to_string("./timetable_100101.json").unwrap();
+    let timetable_json = std::fs::read_to_string("./timetable_100101.json").unwrap();
     Ok(timetable_json)
 }
 
 #[component]
 pub fn LessonEl(lesson: Lesson) -> Element {
-    let colors: Vec<String> = [
+    let colors = vec![
         "mauve", "red", "blue", "sapphire", "teal", "sky", "maroon", "green",
-    ]
-    .map(|x| x.to_string())
-    .to_vec();
+    ];
 
     let color: String = colors.choose(&mut rand::rng()).unwrap().to_string();
 
@@ -99,18 +103,23 @@ pub fn Timetable() -> Element {
         room: "room".to_string(),
     };
 
-    let lessons: Vec<Lesson> = [example_lesson].to_vec();
+    // let lessons: Vec<Lesson> = vec![example_lesson];
 
     let timetable_string = use_server_future(get_timetable_json)?;
     let timetable: TimetableJSON =
         serde_json::from_str(&timetable_string.unwrap().unwrap()).unwrap();
 
-    let lessons: Vec<Lesson> = timetable.lessons.wed.clone();
+    // let lessons: Vec<Lesson> = timetable.lessons.wed.clone();
+    let lessons = use_signal(|| timetable.lessons.wed.clone());
+    use_context_provider(|| CurrentLessons { lessons });
+
+    let dt = Local::now();
+    let day = dt.weekday();
 
     rsx! {
         document::Stylesheet { href: asset!("/assets/pages/timetable.scss") }
         div { id: "content",
-            h1 { id: "main-title", "Timetable" }
+            h1 { id: "main-title", "{day}" }
 
             div { id: "grid-container",
                 div { id: "times",
@@ -119,7 +128,7 @@ pub fn Timetable() -> Element {
                     }
                 }
                 div { id: "lessons",
-                    for lesson in lessons {
+                    for lesson in lessons.iter() {
                         LessonEl { lesson }
                     }
                 }
