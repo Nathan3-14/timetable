@@ -3,6 +3,7 @@ use chrono::Local;
 use dioxus::prelude::*;
 use rand::seq::IndexedRandom;
 use serde::Deserialize;
+use std::ops::Index;
 
 #[derive(Clone, PartialEq, Debug, Deserialize)]
 pub struct Lesson {
@@ -12,7 +13,7 @@ pub struct Lesson {
     room: String,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone)]
 struct Lessons {
     mon: Vec<Lesson>,
     tue: Vec<Lesson>,
@@ -21,15 +22,24 @@ struct Lessons {
     fri: Vec<Lesson>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone)]
 struct TimetableJSON {
     id: isize,
     lessons: Lessons,
 }
 
-#[derive(Clone, Copy)]
-struct CurrentLessons {
-    lessons: Signal<Vec<Lesson>>,
+impl Index<usize> for Lessons {
+    type Output = Vec<Lesson>;
+    fn index(&self, s: usize) -> &Vec<Lesson> {
+        match s {
+            0 => &self.mon,
+            1 => &self.tue,
+            2 => &self.wed,
+            3 => &self.thu,
+            4 => &self.fri,
+            _ => panic!("unknown field: {}", s),
+        }
+    }
 }
 
 #[server]
@@ -40,7 +50,7 @@ pub async fn get_timetable_json() -> Result<String, ServerFnError> {
 
 #[component]
 pub fn LessonEl(lesson: Lesson) -> Element {
-    let colors = vec![
+    let colors = [
         "mauve", "red", "blue", "sapphire", "teal", "sky", "maroon", "green",
     ];
 
@@ -90,36 +100,48 @@ pub fn LessonEl(lesson: Lesson) -> Element {
 
 #[component]
 pub fn Timetable() -> Element {
+    const WEEKDAYS: [&str; 5] = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+
     let mut times: Vec<String> = Vec::new();
     for hour in 8..18 {
         let text: String = format!("{0:0>2}", hour.to_string()) + ":00";
         times.push(text);
     }
 
-    let example_lesson: Lesson = Lesson {
-        subject: "subject".to_string(),
-        // teacher_name: "teacher name".to_string(),
-        time: "09:15-11:30".to_string(),
-        room: "room".to_string(),
-    };
-
-    // let lessons: Vec<Lesson> = vec![example_lesson];
-
     let timetable_string = use_server_future(get_timetable_json)?;
     let timetable: TimetableJSON =
         serde_json::from_str(&timetable_string.unwrap().unwrap()).unwrap();
-
-    // let lessons: Vec<Lesson> = timetable.lessons.wed.clone();
-    let lessons = use_signal(|| timetable.lessons.wed.clone());
-    use_context_provider(|| CurrentLessons { lessons });
+    let inc = timetable.clone();
 
     let dt = Local::now();
     let day = dt.weekday();
+    let mut day_index = use_signal(|| day.number_from_monday() as usize - 1);
+
+    if *day_index.read() > 4 {
+        day_index.set(0);
+    };
+
+    let mut lessons: Signal<Vec<Lesson>> =
+        use_signal(|| timetable.lessons[*day_index.read()].clone());
 
     rsx! {
         document::Stylesheet { href: asset!("/assets/pages/timetable.scss") }
         div { id: "content",
-            h1 { id: "main-title", "{day}" }
+            button {
+                onclick: move |_| {
+                    day_index.set((day_index + 1) % 5);
+                    lessons.set(inc.lessons[*day_index.read()]);
+                },
+            }
+
+            h1 { id: "main-title", "{WEEKDAYS[*day_index.read()]}" }
+
+            button {
+                onclick: move |_| {
+                    day_index.set((day_index - 1) % 5);
+                    lessons.set(timetable.clone().lessons[*day_index.read()]);
+                },
+            }
 
             div { id: "grid-container",
                 div { id: "times",
@@ -128,7 +150,7 @@ pub fn Timetable() -> Element {
                     }
                 }
                 div { id: "lessons",
-                    for lesson in lessons.iter() {
+                    for lesson in lessons.read().clone() {
                         LessonEl { lesson }
                     }
                 }
