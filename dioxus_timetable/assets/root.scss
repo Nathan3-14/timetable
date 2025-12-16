@@ -4,19 +4,24 @@
 /* @use "./components/components.scss"; */
 /* @use "./pages/pages.scss"; */
 
-// @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
-// @import url("https://fonts.googleapis.com/css2?family=Cascadia+Code:ital,wght@0,200..700;1,200..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cascadia+Code:ital,wght@0,200..700;1,200..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=keyboard_arrow_left,keyboard_arrow_right");
 
-@font-face {
-  font-family: Montserrat;
-  // font-weight: normal;
-  src: url("./fonts/Montserrat.ttf");
-}
-
-@font-face {
-  font-family: "Cascadia Code";
-  src: url("./fonts/CascadiaCode.ttf");
-}
+// @font-face {
+//   font-family: Montserrat;
+//   src: url("./fonts/Montserrat.ttf");
+// }
+//
+// @font-face {
+//   font-family: "Cascadia Code";
+//   src: url("./fonts/CascadiaCode.ttf");
+// }
+//
+// @font-face {
+//   font-family: "Material Symbols Rounded";
+//   src: url("./fonts/MaterialSymbolsRounded.ttf");
+// }
 
 html,
 body {

@@ -14,10 +14,27 @@
   background: transparent;
 }
 
-#main-title {
-  text-align: center;
+#title-grid {
+  display: grid;
+  grid-template-columns: 1fr 5fr 1fr;
+  margin-inline: 50px;
+
+  justify-content: center;
+  align-items: center;
 
   margin-bottom: 30px;
+}
+
+#main-title {
+  text-align: center;
+}
+
+#day-button {
+  background: none;
+  border: none;
+  color: var(--text);
+  font-family: "Material Symbols Rounded";
+  font-size: 30pt;
 }
 
 #grid-container {
