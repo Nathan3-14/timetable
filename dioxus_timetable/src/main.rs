@@ -10,6 +10,9 @@ enum Route {
     #[layout(Navbar)]
     #[route("/")]
     Timetable,
+
+    #[route("/settings")]
+    Settings,
 }
 
 pub fn capitalise(s: &str) -> String {

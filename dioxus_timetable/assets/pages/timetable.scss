@@ -10,6 +10,7 @@
 
 // so that the timetable can always be scrolled into view
 #bottom-padding {
+  grid-row-start: -1;
   height: 100px;
   background: transparent;
 }
@@ -17,7 +18,7 @@
 #title-grid {
   display: grid;
   grid-template-columns: 1fr 10fr 1fr;
-  margin-inline: 30px;
+  margin-inline: 20px;
 
   justify-content: center;
   align-items: center;
@@ -93,8 +94,13 @@ p#time {
   width: 100%;
   border-radius: 10px;
 
-  padding: 5px;
+  --padding: 5px;
+  padding: var(--padding);
   line-height: 1.1;
+
+  display: grid;
+  grid-template-columns: 1fr 50px;
+  grid-template-rows: 1fr 16px;
 
   & > * {
     @supports (mix-blend-mode: plus-darker) {
@@ -104,5 +110,24 @@ p#time {
     @supports not (mix-blend-mode: plus-darker) {
       color: rgba(0, 0, 0, 0.7);
     }
+  }
+
+  & > h1#lesson__subject-name {
+    font-size: 1.65rem;
+  }
+
+  & > div#lesson__header {
+    grid-column-start: 1;
+    grid-row-start: 1;
+  }
+
+  & > p#lesson__time-start,
+  p#lesson__time-end {
+    font-family: "Cascadia Code";
+    grid-column-start: 2;
+  }
+
+  & > p#lesson__time-start {
+    grid-row-start: 1;
   }
 }
