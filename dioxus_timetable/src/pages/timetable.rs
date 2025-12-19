@@ -135,7 +135,7 @@ pub fn Timetable() -> Element {
                 button {
                     id: "day-button",
                     onclick: move |_| {
-                        day_index.set((day_index - 1) % 5);
+                        day_index.set((day_index + 4) % 5);
                     },
                     "keyboard_arrow_left"
                 }

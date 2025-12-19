@@ -7,7 +7,7 @@ pub fn Navbar() -> Element {
         document::Stylesheet { href: asset!("/assets/components/navbar.scss") }
         div { id: "navbar",
             Link { to: Route::Timetable, "Timetable" }
-            Link { to: Route::Settings, "Settings" }
+            Link { class: "link link--settings", to: Route::Settings, "settings" }
         }
         Outlet::<Route> {}
     }
