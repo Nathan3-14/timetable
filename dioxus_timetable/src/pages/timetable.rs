@@ -1,11 +1,13 @@
 use chrono::Datelike;
 use chrono::Local;
+use dioxus::mobile::wry::cookie::time::Time;
 use dioxus::prelude::*;
 use rand::seq::IndexedRandom;
 use serde::Deserialize;
+use serde::Serialize;
 use std::ops::Index;
 
-#[derive(Clone, PartialEq, Debug, Deserialize)]
+#[derive(Clone, PartialEq, Debug, Deserialize, Serialize)]
 pub struct Lesson {
     subject: String,
     // teacher_name: String,
@@ -13,7 +15,7 @@ pub struct Lesson {
     room: String,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 struct Lessons {
     mon: Vec<Lesson>,
     tue: Vec<Lesson>,
@@ -22,15 +24,10 @@ struct Lessons {
     fri: Vec<Lesson>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 struct TimetableJSON {
     id: isize,
     lessons: Lessons,
-}
-
-#[derive(Clone, Copy)]
-struct CurrentLessons {
-    lessons: Signal<Vec<Lesson>>,
 }
 
 impl Index<usize> for Lessons {
@@ -47,9 +44,24 @@ impl Index<usize> for Lessons {
     }
 }
 
-#[server]
-pub async fn get_timetable_json() -> Result<String, ServerFnError> {
-    let timetable_json = std::fs::read_to_string("./timetable_100101.json").unwrap();
+fn get_timetable() -> Result<TimetableJSON> {
+    // let timetable_json = std::fs::read_to_string("./timetable_100101.json").unwrap();
+    // let path = mobile_storage::storage_path();
+    let timetable_json = TimetableJSON {
+        id: 100101,
+        lessons: Lessons {
+            mon: vec![Lesson {
+                subject: "Subject".to_string(),
+                time: "10:10-11:15".to_string(),
+                room: "A000".to_string(),
+            }],
+            tue: vec![],
+            wed: vec![],
+            thu: vec![],
+            fri: vec![],
+        },
+    };
+
     Ok(timetable_json)
 }
 
@@ -116,9 +128,11 @@ pub fn Timetable() -> Element {
         times.push(text);
     }
 
-    let timetable_string = use_server_future(get_timetable_json)?;
-    let timetable: TimetableJSON =
-        serde_json::from_str(&timetable_string.unwrap().unwrap()).unwrap();
+    // let timetable_string = use_server_future(get_timetable_json)?;
+    // let timetable: TimetableJSON =
+    // serde_json::from_str(&timetable_string.unwrap().unwrap()).unwrap();
+
+    let timetable: TimetableJSON = get_timetable().unwrap();
 
     let dt = Local::now();
     let day = dt.weekday();
