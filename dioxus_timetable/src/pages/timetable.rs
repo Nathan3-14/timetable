@@ -1,6 +1,6 @@
+use crate::pages::no_timetable::*;
 use chrono::Datelike;
 use chrono::Local;
-use dioxus::mobile::wry::cookie::time::Time;
 use dioxus::prelude::*;
 use rand::seq::IndexedRandom;
 use serde::Deserialize;
@@ -47,20 +47,24 @@ impl Index<usize> for Lessons {
 fn get_timetable() -> Result<TimetableJSON> {
     // let timetable_json = std::fs::read_to_string("./timetable_100101.json").unwrap();
     // let path = mobile_storage::storage_path();
-    let timetable_json = TimetableJSON {
-        id: 100101,
+    let init_lessons = vec![Lesson {
+        subject: "Nothing".to_string(),
+        time: "08:55-10:25".to_string(),
+        room: "Import your `timetable.json` file in settings.".to_string(),
+    }];
+
+    let init_data = TimetableJSON {
+        id: 0,
         lessons: Lessons {
-            mon: vec![Lesson {
-                subject: "Subject".to_string(),
-                time: "10:10-11:15".to_string(),
-                room: "A000".to_string(),
-            }],
-            tue: vec![],
-            wed: vec![],
-            thu: vec![],
-            fri: vec![],
+            mon: init_lessons.clone(),
+            tue: init_lessons.clone(),
+            wed: init_lessons.clone(),
+            thu: init_lessons.clone(),
+            fri: init_lessons,
         },
     };
+
+    let timetable_json = init_data;
 
     Ok(timetable_json)
 }
@@ -145,37 +149,41 @@ pub fn Timetable() -> Element {
     rsx! {
         document::Stylesheet { href: asset!("/assets/pages/timetable.scss") }
         div { id: "content",
-            div { id: "title-grid",
-                button {
-                    id: "day-button",
-                    onclick: move |_| {
-                        day_index.set((day_index + 4) % 5);
-                    },
-                    "keyboard_arrow_left"
-                }
+            if false {
+                div { id: "title-grid",
+                    button {
+                        id: "day-button",
+                        onclick: move |_| {
+                            day_index.set((day_index + 4) % 5);
+                        },
+                        "keyboard_arrow_left"
+                    }
 
-                h1 { id: "main-title", "{WEEKDAYS[*day_index.read()].trim_end()}" }
+                    h1 { id: "main-title", "{WEEKDAYS[*day_index.read()].trim_end()}" }
 
-                button {
-                    id: "day-button",
-                    onclick: move |_| {
-                        day_index.set((day_index + 1) % 5);
-                    },
-                    "keyboard_arrow_right"
-                }
-            }
-
-            div { id: "grid-container",
-                div { id: "times",
-                    for time in times {
-                        p { id: "time", "{time}" }
+                    button {
+                        id: "day-button",
+                        onclick: move |_| {
+                            day_index.set((day_index + 1) % 5);
+                        },
+                        "keyboard_arrow_right"
                     }
                 }
-                div { id: "lessons",
-                    for lesson in timetable.lessons[*day_index.read()].clone() {
-                        LessonEl { lesson }
+
+                div { id: "grid-container",
+                    div { id: "times",
+                        for time in times {
+                            p { id: "time", "{time}" }
+                        }
+                    }
+                    div { id: "lessons",
+                        for lesson in timetable.lessons[*day_index.read()].clone() {
+                            LessonEl { lesson }
+                        }
                     }
                 }
+            } else {
+                NoTimetable {}
             }
 
             div { id: "bottom-padding" }

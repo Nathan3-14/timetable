@@ -1,0 +1,28 @@
+#title,
+#desc {
+  text-align: center;
+}
+
+#title {
+  color: var(--red);
+  font-size: 20pt;
+  margin-bottom: 20px;
+  margin-top: 30dvh;
+}
+
+#desc {
+  font-size: 13pt;
+
+  code {
+    background: var(--base);
+    font: "Cascadia Code";
+    padding: 4px;
+    border: 1px solid var(--surface1);
+    border-radius: 7px;
+  }
+
+  #settingsLink {
+    color: var(--blue);
+    text-decoration: underline;
+  }
+}
