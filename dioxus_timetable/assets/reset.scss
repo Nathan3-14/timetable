@@ -3,6 +3,7 @@
 *::before,
 *::after {
   box-sizing: border-box;
+  user-select: none;
 }
 
 /* 2. Remove default margin */
