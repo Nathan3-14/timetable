@@ -1,3 +1,4 @@
+use crate::mobile_storage::*;
 use crate::pages::no_timetable::*;
 use chrono::Datelike;
 use chrono::Local;
@@ -26,7 +27,7 @@ struct Lessons {
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 struct TimetableJSON {
-    id: isize,
+    id: i32,
     lessons: Lessons,
 }
 
@@ -44,7 +45,7 @@ impl Index<usize> for Lessons {
     }
 }
 
-fn get_timetable() -> Result<TimetableJSON> {
+fn get_timetables() -> Result<Vec<TimetableJSON>> {
     // let timetable_json = std::fs::read_to_string("./timetable_100101.json").unwrap();
     // let path = mobile_storage::storage_path();
     let init_lessons = vec![Lesson {
@@ -53,8 +54,26 @@ fn get_timetable() -> Result<TimetableJSON> {
         room: "Import your `timetable.json` file in settings.".to_string(),
     }];
 
+    let path = storage_path();
+
+    let timetables_str = std::fs::read_to_string(&path)?;
+    let whole_json: serde_json::Value = serde_json::from_str(&timetables_str)?;
+    let ids = whole_json.as_object().unwrap().keys();
+    let mut timetables: Vec<TimetableJSON> = vec![];
+
+    for id in ids {
+        let id = id.as_str();
+        if let Some(timetable) = whole_json.get(id) {
+            let timetable: TimetableJSON = TimetableJSON {
+                id: id.parse::<i32>()?,
+                lessons: serde_json::from_value(timetable.get("lessons").unwrap().clone())?,
+            };
+            timetables.push(timetable);
+        }
+    }
+
     let init_data = TimetableJSON {
-        id: 0,
+        id: 100101,
         lessons: Lessons {
             mon: init_lessons.clone(),
             tue: init_lessons.clone(),
@@ -66,7 +85,7 @@ fn get_timetable() -> Result<TimetableJSON> {
 
     let timetable_json = init_data;
 
-    Ok(timetable_json)
+    Ok(timetables)
 }
 
 #[component]
@@ -136,7 +155,8 @@ pub fn Timetable() -> Element {
     // let timetable: TimetableJSON =
     // serde_json::from_str(&timetable_string.unwrap().unwrap()).unwrap();
 
-    let timetable: TimetableJSON = get_timetable().unwrap();
+    let timetables: Vec<TimetableJSON> = get_timetables().unwrap();
+    let timetable = timetables.get(0);
 
     let dt = Local::now();
     let day = dt.weekday();
@@ -149,11 +169,12 @@ pub fn Timetable() -> Element {
     rsx! {
         document::Stylesheet { href: asset!("/assets/pages/timetable.scss") }
         div { id: "content",
-            if false {
+            if Option::is_some(&timetable) {
                 div { id: "title-grid",
                     button {
                         id: "day-button",
                         onclick: move |_| {
+                            // + 4 then mod 5 is the same as - 1 then mod 5
                             day_index.set((day_index + 4) % 5);
                         },
                         "keyboard_arrow_left"
@@ -168,6 +189,12 @@ pub fn Timetable() -> Element {
                         },
                         "keyboard_arrow_right"
                     }
+
+                    select {
+                        for timetable in &timetables {
+                            option { value: "{timetable.id}", "{timetable.id}" }
+                        }
+                    }
                 }
 
                 div { id: "grid-container",
@@ -177,7 +204,7 @@ pub fn Timetable() -> Element {
                         }
                     }
                     div { id: "lessons",
-                        for lesson in timetable.lessons[*day_index.read()].clone() {
+                        for lesson in timetable.unwrap().lessons[*day_index.read()].clone() {
                             LessonEl { lesson }
                         }
                     }

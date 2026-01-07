@@ -38,6 +38,15 @@
   font-size: 30pt;
 }
 
+select {
+  font-family: "Cascadia Code";
+  grid-column: 2 / span 1;
+  text-align: center;
+  background-color: var(--surface0);
+  border: none;
+  color: var(--text);
+}
+
 #grid-container {
   --time-col-width: 50px;
   display: grid;

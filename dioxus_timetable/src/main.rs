@@ -1,4 +1,5 @@
 mod components;
+mod mobile_storage;
 mod pages;
 
 use crate::components::*;
