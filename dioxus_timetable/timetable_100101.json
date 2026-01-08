@@ -1,6 +1,14 @@
 {
   "$schema": "./timetable.schema.json",
   "id": 100101,
+  "subjects": [
+    "Maths",
+    "Further Maths",
+    "Computer Science",
+    "Music Tech",
+    "R.P.E.",
+    "Tutor"
+  ],
   "lessons": {
     "mon": [
       {
@@ -88,7 +96,7 @@
     ],
     "thu": [
       {
-        "subject": "R.P.",
+        "subject": "R.P.E.",
         "teacher_name": "Leo Nikolaidis",
         "time": "10:40-11:25",
         "room": "C106"
