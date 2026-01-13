@@ -2,10 +2,15 @@ use crate::mobile_storage::*;
 use crate::pages::no_timetable::*;
 use chrono::Datelike;
 use chrono::Local;
+use dioxus::html::g::local;
+use dioxus::logger::tracing;
 use dioxus::prelude::*;
 use rand::seq::IndexedRandom;
 use serde::Deserialize;
 use serde::Serialize;
+use serde_json::Value;
+use std::io::Read;
+use std::io::{Error, ErrorKind};
 use std::ops::Index;
 
 #[derive(Clone, PartialEq, Debug, Deserialize, Serialize)]
@@ -45,20 +50,69 @@ impl Index<usize> for Lessons {
     }
 }
 
+fn rem_first_and_last(s: &str) -> String {
+    let mut s = s.to_string();
+    s.pop(); // remove last
+    s.pop(); // last 2
+    if !s.is_empty() {
+        s.remove(0); // remove first
+    }
+    s
+}
+
 fn get_timetables() -> Result<Vec<TimetableJSON>> {
-    // let timetable_json = std::fs::read_to_string("./timetable_100101.json").unwrap();
-    // let path = mobile_storage::storage_path();
     let init_lessons = vec![Lesson {
         subject: "Nothing".to_string(),
         time: "08:55-10:25".to_string(),
         room: "Import your `timetable.json` file in settings.".to_string(),
     }];
 
-    let path = storage_path();
+    let local_storage_path = storage_path();
 
-    let timetables_str = std::fs::read_to_string(&path)?;
-    let whole_json: serde_json::Value = serde_json::from_str(&timetables_str)?;
+    let home = std::env::var("HOME").expect("HOME not set on iOS");
+    let downloads = std::path::PathBuf::from(home).join("Downloads");
+    let timetable_fname = downloads.join("timetable.json");
+    let file = std::fs::OpenOptions::new()
+        .read(true)
+        .open(timetable_fname)
+        .ok();
+
+    let mut existing_timetables = std::fs::read_to_string(&local_storage_path)?;
+    let whole_json: serde_json::Value = serde_json::from_str(&existing_timetables)?;
     let ids = whole_json.as_object().unwrap().keys();
+    let mut ids_2 = ids.clone();
+
+    tracing::info!("{:?}", ids);
+
+    if let Some(mut f) = file {
+        let mut new_timetable = String::new();
+        f.read_to_string(&mut new_timetable)?;
+        let new_timetable_json: Value = serde_json::from_str(&new_timetable)?;
+        let new_id = new_timetable_json.as_object().unwrap().keys().next();
+
+        let _ = std::fs::write(downloads.join("test"), b"test succeeded");
+
+        if Option::is_some(&ids_2.find(|&x| x == new_id.unwrap())) {
+        } else {
+            let id_only = rem_first_and_last(&new_timetable);
+            let _ = std::fs::write(downloads.join("test"), &id_only);
+
+            existing_timetables.pop();
+            existing_timetables.pop();
+            // tracing::info!("{existing_timetables}");
+            let mut comma = ""; // so that the comma is only added for the not-first timetable
+            if ids.len() > 0 {
+                comma = ",";
+            }
+            existing_timetables = existing_timetables + comma + &id_only + "}";
+
+            let _ = std::fs::write(local_storage_path, &existing_timetables);
+        }
+    }
+
+    let whole_json: serde_json::Value = serde_json::from_str(&existing_timetables)?;
+    let ids = whole_json.as_object().unwrap().keys();
+
     let mut timetables: Vec<TimetableJSON> = vec![];
 
     for id in ids {
@@ -86,6 +140,20 @@ fn get_timetables() -> Result<Vec<TimetableJSON>> {
     let timetable_json = init_data;
 
     Ok(timetables)
+}
+
+fn fetch_timetable_for_id(id: i32, timetables: Vec<TimetableJSON>) -> Result<TimetableJSON> {
+    for timetable in timetables {
+        if timetable.id == id {
+            return Ok(timetable);
+        }
+    }
+
+    Err(Error::new(
+        ErrorKind::InvalidData,
+        "Requested ID not in timetables list.",
+    )
+    .into())
 }
 
 #[component]
@@ -156,7 +224,10 @@ pub fn Timetable() -> Element {
     // serde_json::from_str(&timetable_string.unwrap().unwrap()).unwrap();
 
     let timetables: Vec<TimetableJSON> = get_timetables().unwrap();
-    let timetable = timetables.get(0);
+    let mut selected_id: Signal<i32> = use_signal(|| match timetables.first() {
+        Some(timetable) => timetable.id,
+        None => 0_i32,
+    });
 
     let dt = Local::now();
     let day = dt.weekday();
@@ -169,7 +240,7 @@ pub fn Timetable() -> Element {
     rsx! {
         document::Stylesheet { href: asset!("/assets/pages/timetable.scss") }
         div { id: "content",
-            if Option::is_some(&timetable) {
+            if !timetables.is_empty() {
                 div { id: "title-grid",
                     button {
                         id: "day-button",
@@ -190,9 +261,9 @@ pub fn Timetable() -> Element {
                         "keyboard_arrow_right"
                     }
 
-                    select {
+                    select { onchange: move |e| { selected_id.set(e.value().parse::<i32>().unwrap()) },
                         for timetable in &timetables {
-                            option { value: "{timetable.id}", "{timetable.id}" }
+                            option { value: timetable.id, "{timetable.id}" }
                         }
                     }
                 }
@@ -204,7 +275,11 @@ pub fn Timetable() -> Element {
                         }
                     }
                     div { id: "lessons",
-                        for lesson in timetable.unwrap().lessons[*day_index.read()].clone() {
+                        for lesson in fetch_timetable_for_id(*selected_id.read(), timetables)
+                            .unwrap()
+                            .lessons[*day_index.read()]
+                            .clone()
+                        {
                             LessonEl { lesson }
                         }
                     }
