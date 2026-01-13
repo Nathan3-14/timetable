@@ -1,61 +1,62 @@
 {
   "$schema": "./timetable.schema.json",
-  "id": 100101,
-  "lessons": {
-    "mon": [
-      { "subject": "art", "time": "10:15-11:15", "room": "C2" },
-      {
-        "subject": "psychology",
-        "teacher_name": "Mr Andrews",
-        "time": "11:15-12:15",
-        "room": "D202"
-      },
-      { "subject": "art", "time": "14:00-15:00", "room": "C2" }
-    ],
-    "tue": [],
-    "wed": [
-      {
-        "subject": "english",
-        "teacher_name": "Mrs Oscarson",
-        "time": "09:00-10:00",
-        "room": "A121"
-      },
-      {
-        "subject": "psychology",
-        "teacher_name": "Mr Andrews",
-        "time": "10:15-11:15",
-        "room": "D202"
-      },
-      {
-        "subject": "rpe",
-        "teacher_name": "Mr Andrews",
-        "time": "13:00-14:00",
-        "room": "C113"
-      }
-    ],
-    "thu": [
-      {
-        "subject": "english",
-        "teacher_name": "Mrs Oscarson",
-        "time": "10:15-11:15",
-        "room": "A121"
-      },
-      {
-        "subject": "psychology",
-        "teacher_name": "Mr Andrews",
-        "time": "11:15-12:15",
-        "room": "D202"
-      }
-    ],
-    "fri": [
-      {
-        "subject": "english",
-        "teacher_name": "Mrs Oscarson",
-        "time": "13:00-14:00",
-        "room": "A121"
-      },
-      { "subject": "art", "time": "14:00-15:00", "room": "C2" }
-    ]
+  "100101": {
+    "lessons": {
+      "mon": [
+        { "subject": "art", "time": "10:15-11:15", "room": "C2" },
+        {
+          "subject": "psychology",
+          "teacher_name": "Mr Andrews",
+          "time": "11:15-12:15",
+          "room": "D202"
+        },
+        { "subject": "art", "time": "14:00-15:00", "room": "C2" }
+      ],
+      "tue": [],
+      "wed": [
+        {
+          "subject": "english",
+          "teacher_name": "Mrs Oscarson",
+          "time": "09:00-10:00",
+          "room": "A121"
+        },
+        {
+          "subject": "psychology",
+          "teacher_name": "Mr Andrews",
+          "time": "10:15-11:15",
+          "room": "D202"
+        },
+        {
+          "subject": "rpe",
+          "teacher_name": "Mr Andrews",
+          "time": "13:00-14:00",
+          "room": "C113"
+        }
+      ],
+      "thu": [
+        {
+          "subject": "english",
+          "teacher_name": "Mrs Oscarson",
+          "time": "10:15-11:15",
+          "room": "A121"
+        },
+        {
+          "subject": "psychology",
+          "teacher_name": "Mr Andrews",
+          "time": "11:15-12:15",
+          "room": "D202"
+        }
+      ],
+      "fri": [
+        {
+          "subject": "english",
+          "teacher_name": "Mrs Oscarson",
+          "time": "13:00-14:00",
+          "room": "A121"
+        },
+        { "subject": "art", "time": "14:00-15:00", "room": "C2" }
+      ]
+    }
   }
 }
 
