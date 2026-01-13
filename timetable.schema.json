@@ -24,16 +24,23 @@
   },
   "patternProperties": {
         "^[0-9]{6}$": {
-            "lessons": {
             "type": "object",
             "properties": {
-                "mon": { "$ref": "#/$defs/lesson_array" },
-                "tue": { "$ref": "#/$defs/lesson_array" },
-                "wed": { "$ref": "#/$defs/lesson_array" },
-                "thu": { "$ref": "#/$defs/lesson_array" },
-                "fri": { "$ref": "#/$defs/lesson_array" }
-            },
-            "required": ["MON", "TUE", "WED", "THU", "FRI"]
+              "lessons": {
+                "type": "object",
+                "properties": {
+                    "mon": { "$ref": "#/$defs/lesson_array" },
+                    "tue": { "$ref": "#/$defs/lesson_array" },
+                    "wed": { "$ref": "#/$defs/lesson_array" },
+                    "thu": { "$ref": "#/$defs/lesson_array" },
+                    "fri": { "$ref": "#/$defs/lesson_array" }
+                },
+                "required": ["MON", "TUE", "WED", "THU", "FRI"]
+              },
+              "subjects": {
+                "type": "array",
+                "items": {"type": "string"}
+              }
             }
         }
   },
