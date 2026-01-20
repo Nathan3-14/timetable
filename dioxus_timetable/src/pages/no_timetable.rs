@@ -12,9 +12,16 @@ pub fn NoTimetable() -> Element {
             // " file given by your college in "
             // Link { id: "settingsLink", to: Route::Settings, "settings" }
             // "."
-            "Please import the timetable file given by your college in "
-            Link { id: "settingsLink", to: Route::Settings, "settings" }
-            "."
+            //
+            // "Please import the timetable file given by your college in "
+            // Link { id: "settingsLink", to: Route::Settings, "settings" }
+            // "."
+            //
+            "Please import your timetable file."
+            br {}
+            br {}
+            "You can do this by downloading it from your college, then placing it in your Downloads folder under the name "
+            code { "timetable.json" }
         }
     }
 }

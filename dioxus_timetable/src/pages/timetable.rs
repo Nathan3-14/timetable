@@ -1,151 +1,68 @@
 use crate::mobile_storage::*;
 use crate::pages::no_timetable::*;
-use chrono::Datelike;
-use chrono::Local;
-use dioxus::html::g::local;
-use dioxus::logger::tracing;
+use crate::types::*;
+use chrono::{Datelike, Local};
 use dioxus::prelude::*;
+use dioxus::{html::g::local, logger::tracing};
 use rand::seq::IndexedRandom;
-use serde::Deserialize;
-use serde::Serialize;
 use serde_json::Value;
-use std::io::Read;
-use std::io::{Error, ErrorKind};
-use std::ops::Index;
-
-#[derive(Clone, PartialEq, Debug, Deserialize, Serialize)]
-pub struct Lesson {
-    subject: String,
-    // teacher_name: String,
-    time: String,
-    room: String,
-}
-
-#[derive(Debug, Deserialize, Serialize, Clone)]
-struct Lessons {
-    mon: Vec<Lesson>,
-    tue: Vec<Lesson>,
-    wed: Vec<Lesson>,
-    thu: Vec<Lesson>,
-    fri: Vec<Lesson>,
-}
-
-#[derive(Debug, Deserialize, Serialize, Clone)]
-struct TimetableJSON {
-    id: i32,
-    lessons: Lessons,
-}
-
-impl Index<usize> for Lessons {
-    type Output = Vec<Lesson>;
-    fn index(&self, s: usize) -> &Vec<Lesson> {
-        match s {
-            0 => &self.mon,
-            1 => &self.tue,
-            2 => &self.wed,
-            3 => &self.thu,
-            4 => &self.fri,
-            _ => panic!("unknown field: {}", s),
-        }
-    }
-}
+use std::collections::HashMap;
+use std::io::{Error, ErrorKind, Read};
 
 fn rem_first_and_last(s: &str) -> String {
     let mut s = s.to_string();
     s.pop(); // remove last
     s.pop(); // last 2
+
     if !s.is_empty() {
         s.remove(0); // remove first
     }
+
     s
 }
 
-fn get_timetables() -> Result<Vec<TimetableJSON>> {
-    let init_lessons = vec![Lesson {
-        subject: "Nothing".to_string(),
-        time: "08:55-10:25".to_string(),
-        room: "Import your `timetable.json` file in settings.".to_string(),
-    }];
+fn get_local_data() -> Result<LocalStorage> {
+    let local_storage_path = crate::mobile_storage::local_storage_path();
 
-    let local_storage_path = storage_path();
+    let local_storage = std::fs::read_to_string(&local_storage_path)?;
+    let mut local_data: LocalStorage = serde_json::from_str(&local_storage)?;
+    let ids: Vec<String> = local_data.timetables.keys().cloned().collect();
 
     let home = std::env::var("HOME").expect("HOME not set on iOS");
     let downloads = std::path::PathBuf::from(home).join("Downloads");
-    let timetable_fname = downloads.join("timetable.json");
+    let new_timetable_path = downloads.join("timetable.json");
     let file = std::fs::OpenOptions::new()
         .read(true)
-        .open(timetable_fname)
+        .open(&new_timetable_path)
         .ok();
-
-    let mut existing_timetables = std::fs::read_to_string(&local_storage_path)?;
-    let whole_json: serde_json::Value = serde_json::from_str(&existing_timetables)?;
-    let ids = whole_json.as_object().unwrap().keys();
-    let mut ids_2 = ids.clone();
 
     tracing::info!("{:?}", ids);
 
     if let Some(mut f) = file {
         let mut new_timetable = String::new();
         f.read_to_string(&mut new_timetable)?;
-        let new_timetable_json: Value = serde_json::from_str(&new_timetable)?;
-        let new_id = new_timetable_json.as_object().unwrap().keys().next();
+        let new_timetable_json: Timetable = serde_json::from_str(&new_timetable)?;
 
         let _ = std::fs::write(downloads.join("test"), b"test succeeded");
 
-        if Option::is_some(&ids_2.find(|&x| x == new_id.unwrap())) {
-        } else {
-            let id_only = rem_first_and_last(&new_timetable);
-            let _ = std::fs::write(downloads.join("test"), &id_only);
+        // if Option::is_some(&ids_2.find(|&x| x == new_id.unwrap())) {
+        if !ids.contains(&new_timetable_json.id) {
+            local_data
+                .timetables
+                .insert(new_timetable_json.id.clone(), new_timetable_json);
 
-            existing_timetables.pop();
-            existing_timetables.pop();
-            // tracing::info!("{existing_timetables}");
-            let mut comma = ""; // so that the comma is only added for the not-first timetable
-            if ids.len() > 0 {
-                comma = ",";
-            }
-            existing_timetables = existing_timetables + comma + &id_only + "}";
-
-            let _ = std::fs::write(local_storage_path, &existing_timetables);
+            let new_json_string = serde_json::to_string_pretty(&local_data).unwrap();
+            let _ = std::fs::write(&local_storage_path, new_json_string);
         }
     }
 
-    let whole_json: serde_json::Value = serde_json::from_str(&existing_timetables)?;
-    let ids = whole_json.as_object().unwrap().keys();
-
-    let mut timetables: Vec<TimetableJSON> = vec![];
-
-    for id in ids {
-        let id = id.as_str();
-        if let Some(timetable) = whole_json.get(id) {
-            let timetable: TimetableJSON = TimetableJSON {
-                id: id.parse::<i32>()?,
-                lessons: serde_json::from_value(timetable.get("lessons").unwrap().clone())?,
-            };
-            timetables.push(timetable);
-        }
-    }
-
-    let init_data = TimetableJSON {
-        id: 100101,
-        lessons: Lessons {
-            mon: init_lessons.clone(),
-            tue: init_lessons.clone(),
-            wed: init_lessons.clone(),
-            thu: init_lessons.clone(),
-            fri: init_lessons,
-        },
-    };
-
-    let timetable_json = init_data;
-
-    Ok(timetables)
+    Ok(local_data)
 }
 
-fn fetch_timetable_for_id(id: i32, timetables: Vec<TimetableJSON>) -> Result<TimetableJSON> {
-    for timetable in timetables {
+fn fetch_timetable_for_id(id: String, timetables: HashMap<String, Timetable>) -> Result<Timetable> {
+    for timetable in timetables.values() {
         if timetable.id == id {
-            return Ok(timetable);
+            return Ok(timetable.clone());
         }
     }
 
@@ -210,7 +127,7 @@ pub fn LessonEl(lesson: Lesson) -> Element {
 }
 
 #[component]
-pub fn Timetable() -> Element {
+pub fn TimetablePage() -> Element {
     const WEEKDAYS: [&str; 5] = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
     let mut times: Vec<String> = Vec::new();
@@ -220,14 +137,21 @@ pub fn Timetable() -> Element {
     }
 
     // let timetable_string = use_server_future(get_timetable_json)?;
-    // let timetable: TimetableJSON =
+    // let timetable: Timetable =
     // serde_json::from_str(&timetable_string.unwrap().unwrap()).unwrap();
 
-    let timetables: Vec<TimetableJSON> = get_timetables().unwrap();
-    let mut selected_id: Signal<i32> = use_signal(|| match timetables.first() {
-        Some(timetable) => timetable.id,
-        None => 0_i32,
-    });
+    let data: LocalStorage = get_local_data().unwrap();
+    // let mut selected_id: Signal<&str> = use_signal(|| match timetables.first() {
+    //     Some(timetable) => &timetable.id,
+    //     None => "0",
+    // });
+
+    let ids: Vec<String> = data.timetables.keys().cloned().collect();
+    let mut selected_id: Signal<String> = use_signal(|| "0".to_string());
+
+    if !data.timetables.is_empty() {
+        selected_id.set(data.timetables.keys().next().unwrap().clone());
+    }
 
     let dt = Local::now();
     let day = dt.weekday();
@@ -240,7 +164,7 @@ pub fn Timetable() -> Element {
     rsx! {
         document::Stylesheet { href: asset!("/assets/pages/timetable.scss") }
         div { id: "content",
-            if !timetables.is_empty() {
+            if &*selected_id.read() != "0" {
                 div { id: "title-grid",
                     button {
                         id: "day-button",
@@ -261,9 +185,16 @@ pub fn Timetable() -> Element {
                         "keyboard_arrow_right"
                     }
 
-                    select { onchange: move |e| { selected_id.set(e.value().parse::<i32>().unwrap()) },
-                        for timetable in &timetables {
-                            option { value: timetable.id, "{timetable.id}" }
+                    select {
+                        onchange: move |e| {
+                            tracing::info!("changing id to: {}", e.value());
+                            selected_id.set(e.value());
+                            tracing::info!("id is now: {}", * selected_id.read())
+                        },
+                        value: "0",
+
+                        for id in ids {
+                            option { value: id.clone(), "{&id}" }
                         }
                     }
                 }
@@ -275,11 +206,7 @@ pub fn Timetable() -> Element {
                         }
                     }
                     div { id: "lessons",
-                        for lesson in fetch_timetable_for_id(*selected_id.read(), timetables)
-                            .unwrap()
-                            .lessons[*day_index.read()]
-                            .clone()
-                        {
+                        for lesson in data.timetables[&*selected_id.read()].lessons[*day_index.read()].clone() {
                             LessonEl { lesson }
                         }
                     }

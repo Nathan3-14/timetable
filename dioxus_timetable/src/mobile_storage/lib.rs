@@ -1,5 +1,7 @@
 use crate::mobile_storage::path;
+use crate::types::LocalStorage;
 use std::{
+    collections::HashMap,
     fs,
     io::Write,
     path::{Path, PathBuf},
@@ -9,7 +11,7 @@ use std::{
 const FILENAME: &str = "timetables.json";
 static STORAGE: OnceLock<PathBuf> = OnceLock::new();
 
-pub fn storage_path() -> PathBuf {
+pub fn local_storage_path() -> PathBuf {
     STORAGE
         .get_or_init(|| {
             // aquí ya llamas a tu path::files_dir()
@@ -24,9 +26,17 @@ pub fn storage_path() -> PathBuf {
                 .open(&file_path)
                 .expect("Failed to open storage file");
 
+            let init_data: LocalStorage = LocalStorage {
+                colors: HashMap::new(),
+                timetables: HashMap::new(),
+            };
+
+            let init_string: String =
+                serde_json::to_string_pretty(&init_data).expect("Failed to parse initial data");
+
             let metadata = file.metadata().expect("Failed to get file metadata");
             if metadata.len() == 0 {
-                file.write_all(b"{}")
+                file.write_all(init_string.as_bytes())
                     .expect("Failed to write initial JSON to storage file");
             }
 
