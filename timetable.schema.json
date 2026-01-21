@@ -20,30 +20,17 @@
   },
   "type": "object",
   "properties": {
-    "$schema": { "type": "string" }
+    "$schema": {"type": "string"},
+    "id": {"type": "string"},
+    "subjects": {"type": "array", "items": {"type": "string"}},
+    "lessons": {"type": "object", "properties": {
+      "mon": {"$ref": "#/$defs/lesson_array"},
+      "tue": {"$ref": "#/$defs/lesson_array"},
+      "wed": {"$ref": "#/$defs/lesson_array"},
+      "thu": {"$ref": "#/$defs/lesson_array"},
+      "fri": {"$ref": "#/$defs/lesson_array"}
+    }}
   },
-  "patternProperties": {
-        "^[0-9]{6}$": {
-            "type": "object",
-            "properties": {
-              "lessons": {
-                "type": "object",
-                "properties": {
-                    "mon": { "$ref": "#/$defs/lesson_array" },
-                    "tue": { "$ref": "#/$defs/lesson_array" },
-                    "wed": { "$ref": "#/$defs/lesson_array" },
-                    "thu": { "$ref": "#/$defs/lesson_array" },
-                    "fri": { "$ref": "#/$defs/lesson_array" }
-                },
-                "required": ["MON", "TUE", "WED", "THU", "FRI"]
-              },
-              "subjects": {
-                "type": "array",
-                "items": {"type": "string"}
-              }
-            }
-        }
-  },
-  "required": ["$schema", "id"]
+  "required": ["id", "subjects", "lessons"]
 }
 
