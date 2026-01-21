@@ -1,126 +1,125 @@
 {
-  "100101": {
-    "subjects": [
-      "Maths",
-      "Further Maths",
-      "Computer Science",
-      "Music Tech",
-      "R.P.E.",
-      "Tutor"
+  "id": "100101",
+  "subjects": [
+    "Maths",
+    "Further Maths",
+    "Computer Science",
+    "Music Tech",
+    "R.P.E.",
+    "Tutor"
+  ],
+  "lessons": {
+    "mon": [
+      {
+        "subject": "Maths",
+        "teacher_name": "Mei",
+        "time": "10:40-12:10",
+        "room": "B112"
+      },
+      {
+        "subject": "Further Maths",
+        "teacher_name": "Joseph Pymar",
+        "time": "12:10-12:55",
+        "room": "B116"
+      },
+      {
+        "subject": "Further Maths",
+        "teacher_name": "Joseph Pymar",
+        "time": "13:45-14:30",
+        "room": "B116"
+      },
+      {
+        "subject": "Music Tech",
+        "teacher_name": "Chris Wiltshire",
+        "time": "14:30-16:00",
+        "room": "A109"
+      }
     ],
-    "lessons": {
-      "mon": [
-        {
-          "subject": "Maths",
-          "teacher_name": "Mei",
-          "time": "10:40-12:10",
-          "room": "B112"
-        },
-        {
-          "subject": "Further Maths",
-          "teacher_name": "Joseph Pymar",
-          "time": "12:10-12:55",
-          "room": "B116"
-        },
-        {
-          "subject": "Further Maths",
-          "teacher_name": "Joseph Pymar",
-          "time": "13:45-14:30",
-          "room": "B116"
-        },
-        {
-          "subject": "Music Tech",
-          "teacher_name": "Chris Wiltshire",
-          "time": "14:30-16:00",
-          "room": "A109"
-        }
-      ],
-      "tue": [
-        {
-          "subject": "Maths",
-          "teacher_name": "Mei",
-          "time": "08:55-10:25",
-          "room": "B112"
-        },
-        {
-          "subject": "Tutor",
-          "teacher_name": "Paolo",
-          "time": "10:40-11:25",
-          "room": "C5"
-        },
-        {
-          "subject": "Computer Science",
-          "teacher_name": "Diane Robinson",
-          "time": "12:10-12:55",
-          "room": "B102"
-        },
-        {
-          "subject": "Computer Science",
-          "teacher_name": "Diane Robinson",
-          "time": "13:45-14:30",
-          "room": "B102"
-        }
-      ],
-      "wed": [
-        {
-          "subject": "Music Tech",
-          "teacher_name": "Chris Wiltshire",
-          "time": "08:55-10:25",
-          "room": "A109"
-        },
-        {
-          "subject": "Further Maths",
-          "teacher_name": "Joseph Pymar",
-          "time": "10:40-12:10",
-          "room": "B116"
-        },
-        {
-          "subject": "Computer Science",
-          "teacher_name": "Diane Robinson",
-          "time": "12:10-12:55",
-          "room": "B102"
-        },
-        {
-          "subject": "Computer Science",
-          "teacher_name": "Diane Robinson",
-          "time": "13:45-14:30",
-          "room": "B102"
-        },
-        {
-          "subject": "Maths",
-          "teacher_name": "Mei",
-          "time": "14:30-16:00",
-          "room": "B112"
-        }
-      ],
-      "thu": [
-        {
-          "subject": "R.P.E.",
-          "teacher_name": "Leo Nikolaidis",
-          "time": "10:40-11:25",
-          "room": "C106"
-        },
-        {
-          "subject": "Music Tech",
-          "teacher_name": "Chris Wiltshire",
-          "time": "13:00-14:30",
-          "room": "A109"
-        },
-        {
-          "subject": "Further Maths",
-          "teacher_name": "Joseph Pymar",
-          "time": "14:30-16:00",
-          "room": "B116"
-        }
-      ],
-      "fri": [
-        {
-          "subject": "Computer Science",
-          "teacher_name": "Diane Robinson",
-          "time": "08:55-10:25",
-          "room": "B102"
-        }
-      ]
-    }
+    "tue": [
+      {
+        "subject": "Maths",
+        "teacher_name": "Mei",
+        "time": "08:55-10:25",
+        "room": "B112"
+      },
+      {
+        "subject": "Tutor",
+        "teacher_name": "Paolo",
+        "time": "10:40-11:25",
+        "room": "C5"
+      },
+      {
+        "subject": "Computer Science",
+        "teacher_name": "Diane Robinson",
+        "time": "12:10-12:55",
+        "room": "B102"
+      },
+      {
+        "subject": "Computer Science",
+        "teacher_name": "Diane Robinson",
+        "time": "13:45-14:30",
+        "room": "B102"
+      }
+    ],
+    "wed": [
+      {
+        "subject": "Music Tech",
+        "teacher_name": "Chris Wiltshire",
+        "time": "08:55-10:25",
+        "room": "A109"
+      },
+      {
+        "subject": "Further Maths",
+        "teacher_name": "Joseph Pymar",
+        "time": "10:40-12:10",
+        "room": "B116"
+      },
+      {
+        "subject": "Computer Science",
+        "teacher_name": "Diane Robinson",
+        "time": "12:10-12:55",
+        "room": "B102"
+      },
+      {
+        "subject": "Computer Science",
+        "teacher_name": "Diane Robinson",
+        "time": "13:45-14:30",
+        "room": "B102"
+      },
+      {
+        "subject": "Maths",
+        "teacher_name": "Mei",
+        "time": "14:30-16:00",
+        "room": "B112"
+      }
+    ],
+    "thu": [
+      {
+        "subject": "R.P.E.",
+        "teacher_name": "Leo Nikolaidis",
+        "time": "10:40-11:25",
+        "room": "C106"
+      },
+      {
+        "subject": "Music Tech",
+        "teacher_name": "Chris Wiltshire",
+        "time": "13:00-14:30",
+        "room": "A109"
+      },
+      {
+        "subject": "Further Maths",
+        "teacher_name": "Joseph Pymar",
+        "time": "14:30-16:00",
+        "room": "B116"
+      }
+    ],
+    "fri": [
+      {
+        "subject": "Computer Science",
+        "teacher_name": "Diane Robinson",
+        "time": "08:55-10:25",
+        "room": "B102"
+      }
+    ]
   }
 }
