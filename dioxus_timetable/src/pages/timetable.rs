@@ -142,8 +142,17 @@ pub fn TimetablePage() -> Element {
 
     let data: LocalStorage = get_local_data().unwrap();
 
-    let mut ids: Vec<String> = data.timetables.keys().cloned().collect();
-    // ids.sort();
+    let mut unsorted_ids: Vec<String> = data.timetables.keys().cloned().collect();
+    unsorted_ids.sort();
+
+    // remove the default_id from the vec
+    unsorted_ids.retain(|x| *x != data.default_id);
+
+    let mut ids: Vec<String> = vec![data.default_id.clone()];
+    // append the rest of the ids so that the default_id is first
+    ids.append(&mut unsorted_ids);
+    // this is because the first element in the vec is the one selected by default in the `select`,
+    // so the default_id needs to be first for it to make sense and work as intended.
 
     let mut selected_id: Signal<String> = use_signal(|| data.default_id.clone());
     // tracing::info!("id is initially: {}", selected_id.read());
