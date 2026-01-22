@@ -22,8 +22,8 @@ pub struct Lessons {
 /// An individual timetable
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Timetable {
-    pub id: String,
     pub subjects: Vec<String>,
+    pub id: String,
     pub lessons: Lessons,
 }
 
@@ -32,6 +32,9 @@ pub struct LocalStorage {
     /// The field for colour preference data.
     /// Stored in the form `<lesson: String>: <color: String>`
     pub colors: HashMap<String, String>,
+
+    /// The id of the timetable to open to.
+    pub default_id: String,
 
     /// The field for Timetable objects.
     /// These are in the form `<id: String>: <timetable: Timetable>`

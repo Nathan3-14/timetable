@@ -36,7 +36,7 @@ fn get_local_data() -> Result<LocalStorage> {
         .open(&new_timetable_path)
         .ok();
 
-    tracing::info!("{:?}", ids);
+    // tracing::info!("{:?}", ids);
 
     if let Some(mut f) = file {
         let mut new_timetable = String::new();
@@ -141,17 +141,14 @@ pub fn TimetablePage() -> Element {
     // serde_json::from_str(&timetable_string.unwrap().unwrap()).unwrap();
 
     let data: LocalStorage = get_local_data().unwrap();
-    // let mut selected_id: Signal<&str> = use_signal(|| match timetables.first() {
-    //     Some(timetable) => &timetable.id,
-    //     None => "0",
-    // });
 
-    let ids: Vec<String> = data.timetables.keys().cloned().collect();
-    let mut selected_id: Signal<String> = use_signal(|| "0".to_string());
+    let mut ids: Vec<String> = data.timetables.keys().cloned().collect();
+    // ids.sort();
 
-    if !data.timetables.is_empty() {
-        selected_id.set(data.timetables.keys().next().unwrap().clone());
-    }
+    let mut selected_id: Signal<String> = use_signal(|| data.default_id.clone());
+    // tracing::info!("id is initially: {}", selected_id.read());
+
+    tracing::info!("{:?}", ids);
 
     let dt = Local::now();
     let day = dt.weekday();
@@ -186,12 +183,12 @@ pub fn TimetablePage() -> Element {
                     }
 
                     select {
-                        onchange: move |e| {
+                        onchange: move |e| async move {
                             tracing::info!("changing id to: {}", e.value());
-                            selected_id.set(e.value());
-                            tracing::info!("id is now: {}", * selected_id.read())
+                            *selected_id.write() = e.value();
+                            tracing::info!("id is now: {}", selected_id);
                         },
-                        value: "0",
+                        value: selected_id(),
 
                         for id in ids {
                             option { value: id.clone(), "{&id}" }
@@ -206,7 +203,10 @@ pub fn TimetablePage() -> Element {
                         }
                     }
                     div { id: "lessons",
-                        for lesson in data.timetables[&*selected_id.read()].lessons[*day_index.read()].clone() {
+                        for lesson in data.timetables.get(&selected_id()).unwrap().lessons[day_index()].clone() {
+                            {
+                                tracing::info!("lesson for {}: {:?}", selected_id, lesson);
+                            }
                             LessonEl { lesson }
                         }
                     }

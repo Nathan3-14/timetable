@@ -28,6 +28,7 @@ pub fn local_storage_path() -> PathBuf {
 
             let init_data: LocalStorage = LocalStorage {
                 colors: HashMap::new(),
+                default_id: "0".to_string(),
                 timetables: HashMap::new(),
             };
 
