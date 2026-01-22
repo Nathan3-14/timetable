@@ -1,6 +1,7 @@
 mod components;
 mod mobile_storage;
 mod pages;
+mod types;
 
 use crate::components::*;
 use crate::pages::*;
@@ -10,7 +11,7 @@ use dioxus::prelude::*;
 enum Route {
     #[layout(Navbar)]
     #[route("/")]
-    Timetable,
+    TimetablePage,
 
     #[route("/settings")]
     Settings,
