@@ -136,10 +136,6 @@ pub fn TimetablePage() -> Element {
         times.push(text);
     }
 
-    // let timetable_string = use_server_future(get_timetable_json)?;
-    // let timetable: Timetable =
-    // serde_json::from_str(&timetable_string.unwrap().unwrap()).unwrap();
-
     let data: LocalStorage = get_local_data().unwrap();
 
     let mut unsorted_ids: Vec<String> = data.timetables.keys().cloned().collect();
@@ -163,7 +159,7 @@ pub fn TimetablePage() -> Element {
     let day = dt.weekday();
     let mut day_index = use_signal(|| day.number_from_monday() as usize - 1);
 
-    if *day_index.read() > 4 {
+    if day_index() > 4 {
         day_index.set(0);
     };
 
@@ -212,7 +208,7 @@ pub fn TimetablePage() -> Element {
                         }
                     }
                     div { id: "lessons",
-                        for lesson in data.timetables.get(&selected_id()).unwrap().lessons[day_index()].clone() {
+                        for lesson in data.timetables[&selected_id()].lessons[day_index()].clone() {
                             {
                                 tracing::info!("lesson for {}: {:?}", selected_id, lesson);
                             }
