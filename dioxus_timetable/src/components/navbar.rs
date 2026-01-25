@@ -12,7 +12,7 @@ pub fn Navbar() -> Element {
                 to: Route::TimetablePage,
                 "calendar_today"
             }
-            Link { id: "link", active_class: "active", to: Route::Settings, "settings" }
+            Link { id: "link", active_class: "active", to: Route::SettingsPage, "settings" }
         }
         Outlet::<Route> {}
     }

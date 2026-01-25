@@ -1,7 +1,7 @@
 use crate::mobile_storage::path;
 use crate::types::LocalStorage;
+use linked_hash_map::LinkedHashMap;
 use std::{
-    collections::HashMap,
     fs,
     io::Write,
     path::{Path, PathBuf},
@@ -27,9 +27,9 @@ pub fn local_storage_path() -> PathBuf {
                 .expect("Failed to open storage file");
 
             let init_data: LocalStorage = LocalStorage {
-                colors: HashMap::new(),
+                colors: LinkedHashMap::new(),
                 default_id: "0".to_string(),
-                timetables: HashMap::new(),
+                timetables: LinkedHashMap::new(),
             };
 
             let init_string: String =

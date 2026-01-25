@@ -1,25 +1,12 @@
-use crate::mobile_storage::*;
 use crate::pages::no_timetable::*;
 use crate::types::*;
 use chrono::{Datelike, Local};
+use dioxus::logger::tracing;
 use dioxus::prelude::*;
-use dioxus::{html::g::local, logger::tracing};
+use linked_hash_map::LinkedHashMap;
 use rand::seq::IndexedRandom;
-use serde_json::Value;
 use std::collections::HashMap;
-use std::io::{Error, ErrorKind, Read};
-
-fn rem_first_and_last(s: &str) -> String {
-    let mut s = s.to_string();
-    s.pop(); // remove last
-    s.pop(); // last 2
-
-    if !s.is_empty() {
-        s.remove(0); // remove first
-    }
-
-    s
-}
+use std::io::{Error, ErrorKind};
 
 fn get_local_data() -> Result<LocalStorage> {
     let local_storage_path = crate::mobile_storage::local_storage_path();
@@ -28,49 +15,7 @@ fn get_local_data() -> Result<LocalStorage> {
     let mut local_data: LocalStorage = serde_json::from_str(&local_storage)?;
     let ids: Vec<String> = local_data.timetables.keys().cloned().collect();
 
-    let home = std::env::var("HOME").expect("HOME not set on iOS");
-    let downloads = std::path::PathBuf::from(home).join("Downloads");
-    let new_timetable_path = downloads.join("timetable.json");
-    let file = std::fs::OpenOptions::new()
-        .read(true)
-        .open(&new_timetable_path)
-        .ok();
-
-    // tracing::info!("{:?}", ids);
-
-    if let Some(mut f) = file {
-        let mut new_timetable = String::new();
-        f.read_to_string(&mut new_timetable)?;
-        let new_timetable_json: Timetable = serde_json::from_str(&new_timetable)?;
-
-        let _ = std::fs::write(downloads.join("test"), b"test succeeded");
-
-        // if Option::is_some(&ids_2.find(|&x| x == new_id.unwrap())) {
-        if !ids.contains(&new_timetable_json.id) {
-            local_data
-                .timetables
-                .insert(new_timetable_json.id.clone(), new_timetable_json);
-
-            let new_json_string = serde_json::to_string_pretty(&local_data).unwrap();
-            let _ = std::fs::write(&local_storage_path, new_json_string);
-        }
-    }
-
     Ok(local_data)
-}
-
-fn fetch_timetable_for_id(id: String, timetables: HashMap<String, Timetable>) -> Result<Timetable> {
-    for timetable in timetables.values() {
-        if timetable.id == id {
-            return Ok(timetable.clone());
-        }
-    }
-
-    Err(Error::new(
-        ErrorKind::InvalidData,
-        "Requested ID not in timetables list.",
-    )
-    .into())
 }
 
 #[component]
@@ -79,7 +24,10 @@ pub fn LessonEl(lesson: Lesson) -> Element {
         "mauve", "red", "blue", "sapphire", "teal", "sky", "maroon", "green",
     ];
 
-    let color: String = colors.choose(&mut rand::rng()).unwrap().to_string();
+    // let color: String = colors.choose(&mut rand::rng()).unwrap().to_string();
+
+    let colors = get_local_data().unwrap().colors;
+    let color = colors.get(&lesson.subject).unwrap();
 
     let times: Vec<String> = lesson
         .time
@@ -137,6 +85,7 @@ pub fn TimetablePage() -> Element {
     }
 
     let data: LocalStorage = get_local_data().unwrap();
+    let colors = data.colors.clone();
 
     let mut unsorted_ids: Vec<String> = data.timetables.keys().cloned().collect();
     unsorted_ids.sort();

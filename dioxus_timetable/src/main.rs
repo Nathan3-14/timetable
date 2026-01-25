@@ -14,7 +14,7 @@ enum Route {
     TimetablePage,
 
     #[route("/settings")]
-    Settings,
+    SettingsPage,
 }
 
 pub fn capitalise(s: &str) -> String {

@@ -1,3 +1,4 @@
+use linked_hash_map::LinkedHashMap;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::ops::Index;
@@ -31,14 +32,14 @@ pub struct Timetable {
 pub struct LocalStorage {
     /// The field for colour preference data.
     /// Stored in the form `<lesson: String>: <color: String>`
-    pub colors: HashMap<String, String>,
+    pub colors: LinkedHashMap<String, String>,
 
     /// The id of the timetable to open to.
     pub default_id: String,
 
     /// The field for Timetable objects.
     /// These are in the form `<id: String>: <timetable: Timetable>`
-    pub timetables: HashMap<String, Timetable>,
+    pub timetables: LinkedHashMap<String, Timetable>,
 }
 
 impl Index<usize> for Lessons {

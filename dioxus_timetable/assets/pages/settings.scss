@@ -7,3 +7,61 @@
   padding: 20px;
   background: none;
 }
+
+#colors {
+  display: grid;
+  grid-template-columns: 1fr;
+  padding-bottom: 20px;
+}
+
+#colors-container {
+  background: var(--surface0);
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.color-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  padding: 3px;
+  padding-inline: 5px;
+
+  width: 100%;
+
+  & > .subject-text {
+    text-align: left;
+  }
+
+  & > .color-text {
+    justify-self: right;
+  }
+}
+
+.color-row:nth-child(odd) {
+  background: var(--base);
+  border-radius: 5px;
+}
+
+#button-grid {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.danger-button {
+  padding: 10px;
+  padding-inline: 20px;
+  border-radius: 15px;
+  border: none;
+  color: var(--crust);
+}
+
+#load-new-timetable {
+  background: var(--lavender);
+}
+
+#reset-timetables {
+  background: var(--red);
+}
