@@ -23,11 +23,23 @@
 .color-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  align-items: center;
 
   padding: 3px;
   padding-inline: 5px;
 
   width: 100%;
+}
+
+.color-row select {
+  background: var(--base);
+  text-align: right;
+}
+
+.color-row > div {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 
   & > .subject-text {
     text-align: left;
@@ -35,12 +47,28 @@
 
   & > .color-text {
     justify-self: right;
+    padding-inline: 10px;
+  }
+
+  & > select {
+    width: 65%px;
+    justify-self: right;
   }
 }
 
 .color-row:nth-child(odd) {
   background: var(--base);
   border-radius: 5px;
+
+  & > div > select {
+    background: var(--surface0);
+  }
+}
+
+#new-timetable-input {
+  width: 100%;
+  margin-block: 30px;
+  background: var(--surface0);
 }
 
 #button-grid {

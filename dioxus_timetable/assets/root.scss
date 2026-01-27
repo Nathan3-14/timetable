@@ -37,3 +37,11 @@ body {
 
   overflow: hidden;
 }
+
+select {
+  appearance: none;
+  border-radius: 1000000px;
+  padding: 3px;
+  padding-inline: 9px;
+  background-image: url("./svg/chevronDown.svg");
+}
