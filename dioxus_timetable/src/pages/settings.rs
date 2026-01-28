@@ -1,5 +1,6 @@
-use crate::types::*;
-use dioxus::{logger::tracing, prelude::*};
+use crate::{mobile_storage::local_storage_path, types::*};
+use dioxus::{html::g::local, logger::tracing, prelude::*};
+use linked_hash_map::LinkedHashMap;
 use std::{collections::HashMap, io::Read};
 
 fn load_new_timetable() -> Result<()> {
@@ -108,6 +109,18 @@ fn change_color(subject: String, color: String) -> Result<()> {
     Ok(())
 }
 
+fn clear_timetables() {
+    let init_data = LocalStorage {
+        colors: LinkedHashMap::new(),
+        default_id: String::from("0"),
+        timetables: LinkedHashMap::new(),
+    };
+    std::fs::write(
+        &local_storage_path(),
+        serde_json::to_string_pretty(&init_data).unwrap(),
+    );
+}
+
 #[component]
 pub fn SettingsPage() -> Element {
     let local_storage_path = crate::mobile_storage::local_storage_path();
@@ -126,10 +139,10 @@ pub fn SettingsPage() -> Element {
     rsx! {
         document::Stylesheet { href: asset!("/assets/pages/settings.scss") }
         div { id: "content",
-            "Settings!"
+            h1 { "Settings" }
 
             div { id: "colors",
-                h1 { "Colours" }
+                h2 { "Colours" }
                 div { id: "colors-container",
                     for (subject , color) in local_data.colors.clone() {
                         div { class: "color-row",
@@ -184,35 +197,32 @@ pub fn SettingsPage() -> Element {
                 }
             }
 
-            input {
-                id: "new-input",
-                r#type: "text",
-                onchange: move |e| { new_timetable_string.set(e.value()) },
-            }
+            h2 { id: "import-header", "Timetables" }
+            div { id: "timetables-settings-container",
+                div { class: "timetables-settings-row",
+                    input {
+                        id: "new-timetable-input",
+                        r#type: "text",
+                        onchange: move |e| { new_timetable_string.set(e.value()) },
+                        placeholder: "paste your timetable here...",
+                    }
 
-            button {
-                id: "new-timetable-button",
-                onclick: move |_| async move {
-                    load_new_timetable_from_string(new_timetable_string.read().clone().to_string())
-                        .unwrap();
-                },
-                "Import timetable from clipboard"
-            }
-
-            div { id: "button-grid",
-                button {
-                    id: "load-new-timetable",
-                    class: "danger-button",
-                    onclick: move |_| {
-                        load_new_timetable().unwrap();
-                    },
-                    "Load New Timetable"
+                    button {
+                        id: "new-timetable-button",
+                        onclick: move |_| async move {
+                            load_new_timetable_from_string(new_timetable_string.read().clone().to_string())
+                                .unwrap();
+                        },
+                        "Import"
+                    }
                 }
-                button {
-                    id: "reset-timetables",
-                    class: "danger-button",
-                    onclick: reset_timetables,
-                    "Clear All Timetables"
+                div { class: "timetables-settings-row",
+                    p { id: "clear-timetables-description", "Clear stored timetables" }
+                    button {
+                        id: "clear-timetables-button",
+                        onclick: |_| { clear_timetables() },
+                        "Clear"
+                    }
                 }
             }
         }

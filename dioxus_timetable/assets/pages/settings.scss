@@ -25,15 +25,17 @@
   grid-template-columns: 1fr 1fr;
   align-items: center;
 
-  padding: 3px;
+  padding: 5px;
   padding-inline: 5px;
 
   width: 100%;
 }
 
 .color-row select {
-  background: var(--base);
-  text-align: right;
+  margin: 3px;
+  background: var(--crust);
+  text-align: center;
+  border: 1px solid var(--lavender);
 }
 
 .color-row > div {
@@ -57,39 +59,52 @@
 }
 
 .color-row:nth-child(odd) {
-  background: var(--base);
+  background: var(--mantle);
   border-radius: 5px;
 
-  & > div > select {
-    background: var(--surface0);
+  // & > div > select {
+  //   background: var(--surface0);
+  // }
+}
+
+.color-row:nth-child(even) {
+  background: var(--base);
+}
+
+#timetables-settings-container {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 7px;
+}
+
+.timetables-settings-row {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 3fr 1fr;
+  gap: 5px;
+}
+
+#new-timetable-input,
+#clear-timetables-description {
+  width: 100%;
+  background: var(--surface0);
+  border-radius: 7px;
+  margin-right: 5px;
+  padding: 7px;
+
+  &::placeholder {
+    color: color-mix(in oklab, var(--lavender) 60%, transparent);
   }
 }
 
-#new-timetable-input {
-  width: 100%;
-  margin-block: 30px;
-  background: var(--surface0);
-}
-
-#button-grid {
-  display: grid;
-  grid-template-rows: 1fr;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.danger-button {
-  padding: 10px;
-  padding-inline: 20px;
-  border-radius: 15px;
+#new-timetable-button,
+#clear-timetables-button {
+  border-radius: 1000px;
+  background: var(--lavender);
   border: none;
   color: var(--crust);
 }
 
-#load-new-timetable {
-  background: var(--lavender);
-}
-
-#reset-timetables {
+#clear-timetables-button {
   background: var(--red);
 }
