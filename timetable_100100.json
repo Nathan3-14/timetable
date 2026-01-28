@@ -1,95 +1,95 @@
 {
   "$schema": "./timetable.schema.json",
-  "100100": {
-    "lessons": {
-      "mon": [
-        {
-          "subject": "maths",
-          "teacher_name": "Mr Barret",
-          "time": "10:15-11:15",
-          "room": "B112"
-        },
-        {
-          "subject": "english",
-          "teacher_name": "Mr Smith",
-          "time": "11:15-12:15",
-          "room": "A21"
-        },
-        {
-          "subject": "rpe",
-          "teacher_name": "Ms Carrel",
-          "time": "14:00-15:00",
-          "room": "C102"
-        }
-      ],
-      "tue": [
-        {
-          "subject": "english",
-          "teacher_name": "Mr Smith",
-          "time": "09:00-10:00",
-          "room": "A21"
-        },
-        {
-          "subject": "physics",
-          "teacher_name": "Mrs Jones",
-          "time": "11:15-12:15",
-          "room": "B212"
-        },
-        {
-          "subject": "core maths",
-          "teacher_name": "Mr Accel",
-          "time": "13:00-14:00",
-          "room": "B122"
-        }
-      ],
-      "wed": [
-        {
-          "subject": "maths",
-          "teacher_name": "Mr Barret",
-          "time": "09:00-10:00",
-          "room": "B112"
-        },
-        {
-          "subject": "english",
-          "teacher_name": "Mr Smith",
-          "time": "14:00-15:00",
-          "room": "A21"
-        }
-      ],
-      "thu": [
-        {
-          "subject": "core maths",
-          "teacher_name": "Mr Accel",
-          "time": "10:15-11:15",
-          "room": "B122"
-        },
-        {
-          "subject": "maths",
-          "teacher_name": "Mr Barret",
-          "time": "11:15-12:15",
-          "room": "B112"
-        },
-        {
-          "subject": "physics",
-          "teacher_name": "Mrs Jones",
-          "time": "14:00-15:00",
-          "room": "B212"
-        }
-      ],
-      "fri": [
-        {
-          "subject": "physics",
-          "teacher_name": "Mrs Jones",
-          "time": "10:15-11:15",
-          "room": "B212"
-        },
-        {
-          "subject": "core maths",
-          "teacher_name": "Mr Accel",
-          "time": "13:00-14:00",
-          "room": "B122"
-        }
-      ]
-    }
+  "id": "100100",
+  "subjects": ["Maths", "English", "RPE", "Physics", "Core Maths"],
+  "lessons": {
+    "mon": [
+      {
+        "subject": "Maths",
+        "teacher_name": "Mr Barret",
+        "time": "10:15-11:15",
+        "room": "B112"
+      },
+      {
+        "subject": "English",
+        "teacher_name": "Mr Smith",
+        "time": "11:15-12:15",
+        "room": "A21"
+      },
+      {
+        "subject": "RPE",
+        "teacher_name": "Ms Carrel",
+        "time": "14:00-15:00",
+        "room": "C102"
+      }
+    ],
+    "tue": [
+      {
+        "subject": "English",
+        "teacher_name": "Mr Smith",
+        "time": "09:00-10:00",
+        "room": "A21"
+      },
+      {
+        "subject": "Physics",
+        "teacher_name": "Mrs Jones",
+        "time": "11:15-12:15",
+        "room": "B212"
+      },
+      {
+        "subject": "Core Maths",
+        "teacher_name": "Mr Accel",
+        "time": "13:00-14:00",
+        "room": "B122"
+      }
+    ],
+    "wed": [
+      {
+        "subject": "Maths",
+        "teacher_name": "Mr Barret",
+        "time": "09:00-10:00",
+        "room": "B112"
+      },
+      {
+        "subject": "English",
+        "teacher_name": "Mr Smith",
+        "time": "14:00-15:00",
+        "room": "A21"
+      }
+    ],
+    "thu": [
+      {
+        "subject": "Core Maths",
+        "teacher_name": "Mr Accel",
+        "time": "10:15-11:15",
+        "room": "B122"
+      },
+      {
+        "subject": "Maths",
+        "teacher_name": "Mr Barret",
+        "time": "11:15-12:15",
+        "room": "B112"
+      },
+      {
+        "subject": "Physics",
+        "teacher_name": "Mrs Jones",
+        "time": "14:00-15:00",
+        "room": "B212"
+      }
+    ],
+    "fri": [
+      {
+        "subject": "Physics",
+        "teacher_name": "Mrs Jones",
+        "time": "10:15-11:15",
+        "room": "B212"
+      },
+      {
+        "subject": "Core Maths",
+        "teacher_name": "Mr Accel",
+        "time": "13:00-14:00",
+        "room": "B122"
+      }
+    ]
   }
 }
