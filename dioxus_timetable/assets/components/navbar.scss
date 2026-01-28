@@ -1,3 +1,7 @@
+:root {
+  --navbar-height: 70px;
+}
+
 #navbar {
   background: color-mix(in oklab, var(--surface0) 65%, transparent);
   backdrop-filter: blur(10px);
@@ -10,7 +14,7 @@
   z-index: 1000000;
 
   width: 100%;
-  height: 70px;
+  height: var(--navbar-height);
 
   display: grid;
   grid-template-columns: 1fr 1fr;

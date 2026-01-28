@@ -1,12 +1,7 @@
 use crate::mobile_storage::path;
 use crate::types::LocalStorage;
 use linked_hash_map::LinkedHashMap;
-use std::{
-    fs,
-    io::Write,
-    path::{Path, PathBuf},
-    sync::OnceLock,
-};
+use std::{io::Write, path::PathBuf, sync::OnceLock};
 
 const FILENAME: &str = "timetables.json";
 static STORAGE: OnceLock<PathBuf> = OnceLock::new();

@@ -1,5 +1,3 @@
-use dioxus::logger::tracing;
-
 #[cfg(target_os = "android")]
 pub fn files_dir() -> std::path::PathBuf {
     use jni::objects::{JObject, JString};

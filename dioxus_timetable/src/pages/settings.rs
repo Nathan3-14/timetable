@@ -1,53 +1,6 @@
 use crate::{mobile_storage::local_storage_path, types::*};
-use dioxus::{html::g::local, logger::tracing, prelude::*};
+use dioxus::{logger::tracing, prelude::*};
 use linked_hash_map::LinkedHashMap;
-use std::{collections::HashMap, io::Read};
-
-fn load_new_timetable() -> Result<()> {
-    let local_storage_path = crate::mobile_storage::local_storage_path();
-
-    let local_storage = std::fs::read_to_string(&local_storage_path)?;
-    let mut local_data: LocalStorage = serde_json::from_str(&local_storage)?;
-    let ids: Vec<String> = local_data.timetables.keys().cloned().collect();
-
-    let home = std::env::var("HOME").expect("HOME not set on iOS");
-    // let home = crate::mobile_storage::path::files_dir();
-    let downloads = std::path::PathBuf::from(home).join("Downloads");
-    // let downloads = home.join("Downloads");
-    let new_timetable_path = downloads.join("timetable.json");
-    let file = std::fs::OpenOptions::new()
-        .read(true)
-        .open(&new_timetable_path)
-        .ok();
-
-    // tracing::info!("{:?}", ids);
-
-    if let Some(mut f) = file {
-        let mut new_timetable = String::new();
-        f.read_to_string(&mut new_timetable)?;
-        let new_timetable_json: Timetable = serde_json::from_str(&new_timetable)?;
-
-        let _ = std::fs::write(downloads.join("test"), b"test succeeded");
-
-        // if Option::is_some(&ids_2.find(|&x| x == new_id.unwrap())) {
-        if !ids.contains(&new_timetable_json.id) {
-            for subject in &new_timetable_json.subjects.clone() {
-                local_data
-                    .colors
-                    .entry(subject.clone())
-                    .or_insert("red".to_string());
-            }
-
-            local_data
-                .timetables
-                .insert(new_timetable_json.id.clone(), new_timetable_json);
-
-            let new_json_string = serde_json::to_string_pretty(&local_data).unwrap();
-            let _ = std::fs::write(&local_storage_path, new_json_string);
-        }
-    }
-    Ok(())
-}
 
 fn load_new_timetable_from_string(new_timetable: String) -> Result<()> {
     let local_storage_path = crate::mobile_storage::local_storage_path();
@@ -83,7 +36,7 @@ fn load_new_timetable_from_string(new_timetable: String) -> Result<()> {
 
         tracing::info!("new timetable added, writing...");
 
-        let new_json_string = serde_json::to_string_pretty(&local_data).unwrap();
+        let new_json_string = serde_json::to_string_pretty(&local_data)?;
         let _ = std::fs::write(&local_storage_path, new_json_string);
         tracing::info!("new timetable written");
     }
@@ -115,8 +68,8 @@ fn clear_timetables() {
         default_id: String::from("0"),
         timetables: LinkedHashMap::new(),
     };
-    std::fs::write(
-        &local_storage_path(),
+    let _ = std::fs::write(
+        local_storage_path(),
         serde_json::to_string_pretty(&init_data).unwrap(),
     );
 }
@@ -126,15 +79,15 @@ pub fn SettingsPage() -> Element {
     let local_storage_path = crate::mobile_storage::local_storage_path();
 
     let local_storage = std::fs::read_to_string(&local_storage_path)?;
-    let mut local_data: LocalStorage = serde_json::from_str(&local_storage)?;
-
-    let mut color_map: HashMap<String, Signal<String>> = HashMap::new();
-
-    for (subject, color) in &local_data.colors {
-        color_map.insert(subject.clone(), use_signal(|| color.clone()));
-    }
+    let local_data: LocalStorage = serde_json::from_str(&local_storage)?;
 
     let mut new_timetable_string = use_signal(String::new);
+
+    // popups
+    let mut confirm_clear_popup_showing: Signal<bool> = use_signal(|| false);
+    let mut timetable_added_popup_showing: Signal<bool> = use_signal(|| false);
+    let mut failed_adding_timetable_popup_showing: Signal<bool> = use_signal(|| false);
+    let mut failed_adding_timetable_text: Signal<String> = use_signal(String::new);
 
     rsx! {
         document::Stylesheet { href: asset!("/assets/pages/settings.scss") }
@@ -144,55 +97,79 @@ pub fn SettingsPage() -> Element {
             div { id: "colors",
                 h2 { "Colours" }
                 div { id: "colors-container",
-                    for (subject , color) in local_data.colors.clone() {
-                        div { class: "color-row",
-                            p { class: "subject-text", "{subject}" }
-                            div {
-                                p {
-                                    id: "color-text-{subject}",
-                                    class: "color-text",
-                                    color: format!("var(--{color})"),
-                                    "⬤"
-                                }
-                                select {
-                                    value: "{color}",
-                                    onchange: move |e| {
-                                        let subjectClone = subject.clone();
-                                        async move {
-                                            change_color(subjectClone.clone(), e.value()).unwrap();
-                                            #[rustfmt::skip]
-                                            // let _ = dioxus::document::eval(
-                                            //         &format!(
-                                            //             r#" document.getElementById("color-text-{subjectClone}").innerText = "{0}" "#,
-                                            //             e.value(),
-                                            //         ),
-                                            //     )
-                                            //     .await;
-                                            let _ = dioxus::document::eval(
-                                                    &format!(
-                                                        r#" document.getElementById("color-text-{subjectClone}").style.color = "var(--{0})" "#,
-                                                        e.value(),
-                                                    ),
-                                                )
-                                                .await;
-                                            tracing::info!("color: {}", e.value());
-                                        }
-                                    },
-                                    option { value: "mauve", color: "var(--mauve)", "Purple" }
-                                    option { value: "red", color: "var(--red)", "Red" }
-                                    option { value: "peach", color: "var(--peach)", "Orange" }
-                                    option { value: "green", color: "var(--green)", "Green" }
-                                    option { value: "teal", color: "var(--teal)", "Teal" }
-                                    // option { value: "sky", color: "var(--sky)", "Sky Blue" }
-                                    option {
-                                        value: "sapphire",
-                                        color: "var(--sapphire)",
-                                        "Sapphire"
+                    if !local_data.colors.is_empty() {
+                        for (subject , color) in local_data.colors.clone() {
+                            div { class: "color-row",
+                                p { class: "subject-text", "{subject}" }
+                                div {
+                                    p {
+                                        id: "color-text-{subject}",
+                                        class: "color-text",
+                                        color: format!("var(--{color})"),
+                                        "⬤"
                                     }
-                                    option { value: "blue", color: "var(--blue)", "Blue" }
+                                    select {
+                                        value: "{color}",
+                                        onchange: move |e| {
+                                            let subjectClone = subject.clone();
+                                            async move {
+                                                change_color(subjectClone.clone(), e.value()).unwrap();
+                                                #[rustfmt::skip]
+                                                // let _ = dioxus::document::eval(
+                                                //         &format!(
+                                                //             r#" document.getElementById("color-text-{subjectClone}").innerText = "{0}" "#,
+                                                //             e.value(),
+                                                //         ),
+                                                //     )
+                                                //     .await;
+                                                let _ = dioxus::document::eval(
+                                                        &format!(
+                                                            r#" document.getElementById("color-text-{subjectClone}").style.color = "var(--{0})" "#,
+                                                            e.value(),
+                                                        ),
+                                                    )
+                                                    .await;
+                                                tracing::info!("color: {}", e.value());
+                                            }
+                                        },
+                                        option {
+                                            value: "mauve",
+                                            color: "var(--mauve)",
+                                            "Purple"
+                                        }
+                                        option { value: "red", color: "var(--red)", "Red" }
+                                        option {
+                                            value: "peach",
+                                            color: "var(--peach)",
+                                            "Orange"
+                                        }
+                                        option {
+                                            value: "green",
+                                            color: "var(--green)",
+                                            "Green"
+                                        }
+                                        option {
+                                            value: "teal",
+                                            color: "var(--teal)",
+                                            "Teal"
+                                        }
+                                        // option { value: "sky", color: "var(--sky)", "Sky Blue" }
+                                        option {
+                                            value: "sapphire",
+                                            color: "var(--sapphire)",
+                                            "Sapphire"
+                                        }
+                                        option {
+                                            value: "blue",
+                                            color: "var(--blue)",
+                                            "Blue"
+                                        }
+                                    }
                                 }
                             }
                         }
+                    } else {
+                        p { "No subjects to colour!" }
                     }
                 }
             }
@@ -210,8 +187,15 @@ pub fn SettingsPage() -> Element {
                     button {
                         id: "new-timetable-button",
                         onclick: move |_| async move {
-                            load_new_timetable_from_string(new_timetable_string.read().clone().to_string())
-                                .unwrap();
+                            match load_new_timetable_from_string(
+                                new_timetable_string.read().clone().to_string(),
+                            ) {
+                                Ok(_) => timetable_added_popup_showing.set(true),
+                                Err(e) => {
+                                    failed_adding_timetable_text.set(e.to_string());
+                                    failed_adding_timetable_popup_showing.set(true);
+                                }
+                            };
                         },
                         "Import"
                     }
@@ -220,8 +204,76 @@ pub fn SettingsPage() -> Element {
                     p { id: "clear-timetables-description", "Clear stored timetables" }
                     button {
                         id: "clear-timetables-button",
-                        onclick: |_| { clear_timetables() },
+                        onclick: move |_| { confirm_clear_popup_showing.set(true) },
                         "Clear"
+                    }
+                }
+            }
+        }
+
+        if confirm_clear_popup_showing() {
+            div { id: "confirm-clear-timetables-popup-bg", class: "popup-bg",
+                div {
+                    id: "confirm-clear-timetables-popup-container",
+                    class: "popup-container",
+                    p {
+                        id: "confirm-clear-timetables-popup-text",
+                        class: "popup-text",
+                        "Are you sure you want to clear your timetables? You will need to re-import any you wish to use."
+                    }
+                    div {
+                        id: "confirm-clear-timetables-popup-buttons-grid",
+                        class: "popup-buttons-grid has-two-buttons",
+                        // "grid-template-columns": "1fr 1fr", // so that the grid works right
+                        button {
+                            class: "popup-button",
+                            onclick: move |_| {
+                                confirm_clear_popup_showing.set(false);
+                            },
+                            "Cancel"
+                        }
+                        button {
+                            class: "popup-button bad-button",
+                            onclick: move |_| {
+                                clear_timetables();
+                                confirm_clear_popup_showing.set(false);
+                            },
+                            "Clear"
+                        }
+                    }
+                }
+            }
+        }
+
+        if timetable_added_popup_showing() {
+            div { class: "popup-bg",
+                div { class: "popup-container",
+                    p { class: "popup-text", "Successfully added timetable!" }
+                    div { class: "popup-buttons-grid",
+                        button {
+                            class: "popup-button",
+                            onclick: move |_| timetable_added_popup_showing.set(false),
+                            "Cool!"
+                        }
+                    }
+                }
+            }
+        }
+
+        if failed_adding_timetable_popup_showing() {
+            div { class: "popup-bg",
+                div { class: "popup-container",
+                    div { class: "popup-text",
+                        "Failed to add timetable:"
+                        p { id: "error-text", {failed_adding_timetable_text()} }
+                        "Perhaps you didn't paste the whole timetable?"
+                    }
+                    div { class: "popup-buttons-grid",
+                        button {
+                            class: "popup-button",
+                            onclick: move |_| failed_adding_timetable_popup_showing.set(false),
+                            "Oh :("
+                        }
                     }
                 }
             }

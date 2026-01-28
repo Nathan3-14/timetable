@@ -3,29 +3,18 @@ use crate::types::*;
 use chrono::{Datelike, Local};
 use dioxus::logger::tracing;
 use dioxus::prelude::*;
-use linked_hash_map::LinkedHashMap;
-use rand::seq::IndexedRandom;
-use std::collections::HashMap;
-use std::io::{Error, ErrorKind};
 
 fn get_local_data() -> Result<LocalStorage> {
     let local_storage_path = crate::mobile_storage::local_storage_path();
 
     let local_storage = std::fs::read_to_string(&local_storage_path)?;
-    let mut local_data: LocalStorage = serde_json::from_str(&local_storage)?;
-    let ids: Vec<String> = local_data.timetables.keys().cloned().collect();
+    let local_data: LocalStorage = serde_json::from_str(&local_storage)?;
 
     Ok(local_data)
 }
 
 #[component]
 pub fn LessonEl(lesson: Lesson) -> Element {
-    let colors = [
-        "mauve", "red", "blue", "sapphire", "teal", "sky", "maroon", "green",
-    ];
-
-    // let color: String = colors.choose(&mut rand::rng()).unwrap().to_string();
-
     let colors = get_local_data().unwrap().colors;
     let color = colors.get(&lesson.subject).unwrap();
 
@@ -85,7 +74,6 @@ pub fn TimetablePage() -> Element {
     }
 
     let data: LocalStorage = get_local_data().unwrap();
-    let colors = data.colors.clone();
 
     let mut unsorted_ids: Vec<String> = data.timetables.keys().cloned().collect();
     unsorted_ids.sort();

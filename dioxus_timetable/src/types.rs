@@ -1,6 +1,5 @@
 use linked_hash_map::LinkedHashMap;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 use std::ops::Index;
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
