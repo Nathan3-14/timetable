@@ -12,7 +12,7 @@
     "mon": [
       {
         "subject": "Maths",
-        "teacher_name": "Mei",
+        "teacher_name": "Mei Chen",
         "time": "10:40-12:10",
         "room": "B112"
       },
@@ -38,13 +38,13 @@
     "tue": [
       {
         "subject": "Maths",
-        "teacher_name": "Mei",
+        "teacher_name": "Mei Chen",
         "time": "08:55-10:25",
         "room": "B112"
       },
       {
         "subject": "Tutor",
-        "teacher_name": "Paolo",
+        "teacher_name": "Paolo Spano",
         "time": "10:40-11:25",
         "room": "C5"
       },
@@ -88,7 +88,7 @@
       },
       {
         "subject": "Maths",
-        "teacher_name": "Mei",
+        "teacher_name": "Mei Chen",
         "time": "14:30-16:00",
         "room": "B112"
       }
