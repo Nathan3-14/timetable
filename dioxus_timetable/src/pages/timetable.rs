@@ -46,19 +46,24 @@ pub fn LessonEl(lesson: Lesson) -> Element {
     grid_span += (end_hour - start_hour) * 12;
     grid_span += (end_minute - start_minute) / 5;
 
+    let subject_name = match lesson.subject.as_str() {
+        "Computer Science" => "C.S.",
+        _ => &lesson.subject,
+    };
+
     rsx! {
         div {
-            id: "lesson",
+            class: "lesson",
             background_color: "var(--{color})",
             grid_row_start: grid_start,
             grid_row_end: "span {grid_span}",
-            div { id: "lesson__header",
-                h1 { id: "lesson__subject-name", "{lesson.subject}" }
-                p { id: "lesson__room", "{lesson.room}" }
+            div { class: "lesson__header",
+                p { class: "lesson__subject-name", "{subject_name}" }
+                p { class: "lesson__room", "{lesson.room}" }
             }
-            // p { id: "lesson__teacher-name", "{lesson.teacher_name}" }
-            p { id: "lesson__time-start", "{start_display}" }
-            p { id: "lesson__time-end", "{end_display}" }
+            p { class: "lesson__teacher-name", "{lesson.teacher_name}" }
+            p { class: "lesson__time-start", "{start_display}" }
+            p { class: "lesson__time-end", "{end_display}" }
         }
     }
 }

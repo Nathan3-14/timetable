@@ -5,7 +5,7 @@ use std::ops::Index;
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 pub struct Lesson {
     pub subject: String,
-    // teacher_name: String,
+    pub teacher_name: String,
     pub time: String,
     pub room: String,
 }

@@ -51,7 +51,7 @@ select {
   --time-col-width: 50px;
   display: grid;
   grid-template-columns: var(--time-col-width) 1fr;
-  height: calc(100px * 10);
+  height: calc(110px * 10);
 }
 
 #times {
@@ -96,7 +96,7 @@ p#time {
   gap: 1px;
 }
 
-#lesson {
+.lesson {
   color: var(--overlay2);
   grid-row-start: calc(12 + 1);
   grid-row-end: span calc(12 * (9 / 6));
@@ -108,8 +108,8 @@ p#time {
   line-height: 1.1;
 
   display: grid;
-  grid-template-columns: 1fr 50px;
-  grid-template-rows: 1fr 16px;
+  grid-template-columns: 10fr 1fr;
+  grid-template-rows: 1fr;
 
   & > * {
     @supports (mix-blend-mode: plus-darker) {
@@ -121,22 +121,35 @@ p#time {
     }
   }
 
-  & > h1#lesson__subject-name {
-    font-size: 1.65rem;
-  }
-
-  & > div#lesson__header {
+  & > div.lesson__header {
     grid-column-start: 1;
     grid-row-start: 1;
+
+    & > p.lesson__subject-name {
+      font-size: 1.65rem;
+      font-weight: 700;
+    }
   }
 
-  & > p#lesson__time-start,
-  p#lesson__time-end {
+  & > p.lesson__teacher-name {
+    align-self: end;
+    justify-self: start;
+  }
+
+  & > p.lesson__time-start,
+  p.lesson__time-end {
     font-family: "Cascadia Code";
     grid-column-start: 2;
   }
 
-  & > p#lesson__time-start {
+  & > p.lesson__time-start {
     grid-row-start: 1;
+    align-self: start;
+    justify-self: end;
+  }
+
+  & > p.lesson__time-end {
+    align-self: end;
+    justify-self: end;
   }
 }
