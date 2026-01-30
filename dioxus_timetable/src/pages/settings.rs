@@ -4,18 +4,17 @@ use linked_hash_map::LinkedHashMap;
 
 fn load_new_timetable_from_string(new_timetable: String) -> anyhow::Result<()> {
     let local_storage_path = crate::mobile_storage::local_storage_path();
-    tracing::info!("{}", &local_storage_path.display());
 
+    // Get the local storage, parse it, and create a vector of all the existing IDs
     let local_storage = std::fs::read_to_string(&local_storage_path)?;
     let mut local_data: LocalStorage = serde_json::from_str(&local_storage)?;
-    // tracing::info!("local: {:?}", local_data);
     let ids: Vec<String> = local_data.timetables.keys().cloned().collect();
 
-    // tracing::info!("new string: {}", new_timetable);
-
+    // Parse the JSON into structs to work with it properly
     let new_timetable_json: Timetable = serde_json::from_str(&new_timetable)?;
-    // tracing::info!("new: {:?}", new_timetable_json);
 
+    // Check that all the subject names are present in the subjects array
+    // If this check weren't here, the program would panic
     for lessons_vec in new_timetable_json.lessons.clone() {
         for lesson in lessons_vec {
             if !new_timetable_json.subjects.contains(&lesson.subject) {
@@ -24,11 +23,11 @@ fn load_new_timetable_from_string(new_timetable: String) -> anyhow::Result<()> {
                     &lesson.subject
                 ));
             }
-            tracing::info!("lesson {} in subjects array", &lesson.subject);
         }
     }
 
-    // if Option::is_some(&ids_2.find(|&x| x == new_id.unwrap())) {
+    // Check if the ID already has an associated timetable
+    // If it does, skip it
     if !ids.contains(&new_timetable_json.id) {
         tracing::info!("new timetable, adding...");
         for subject in &new_timetable_json.subjects.clone() {
@@ -42,17 +41,17 @@ fn load_new_timetable_from_string(new_timetable: String) -> anyhow::Result<()> {
             local_data.default_id = new_timetable_json.id.clone();
         }
 
+        // Insert the new timetable into the HashMap of timetables
         local_data
             .timetables
             .insert(new_timetable_json.id.clone(), new_timetable_json);
 
-        tracing::info!("new timetable added, writing...");
-
         let new_json_string = serde_json::to_string_pretty(&local_data)?;
+        // ignore the result of the write, it should never go wrong
         let _ = std::fs::write(&local_storage_path, new_json_string);
-        tracing::info!("new timetable written");
     }
 
+    // default return case, assuming nothing went wrong.
     Ok(())
 }
 
