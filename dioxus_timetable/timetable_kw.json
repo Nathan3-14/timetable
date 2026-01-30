@@ -1,0 +1,106 @@
+{
+  "id": "Kodi",
+  "subjects": [
+    "English GCSE",
+    "Uniformed Protective Services",
+    "Music Tech",
+    "R.P.E.",
+    "Tutor"
+  ],
+  "lessons": {
+    "mon": [
+      {
+        "subject": "English GCSE",
+        "teacher_name": "Thomas Patterson",
+        "time": "10:40-12:10",
+        "room": "A109"
+      },
+      {
+        "subject": "Uniformed Protective Services",
+        "teacher_name": "David Hodder",
+        "time": "13:00-14:30",
+        "room": "B21"
+      },
+      {
+        "subject": "Tutor",
+        "teacher_name": "Rachel Potter",
+        "time": "14:30-16:00",
+        "room": "C6"
+      }
+    ],
+    "tue": [
+      {
+        "subject": "English GCSE",
+        "teacher_name": "Thomas Patterson",
+        "time": "08:55-10:25",
+        "room": "A109"
+      },
+      {
+        "subject": "Uniformed Protective Services",
+        "teacher_name": "Tracey Poole",
+        "time": "10:40-12:10",
+        "room": "B21"
+      },
+      {
+        "subject": "Music Tech",
+        "teacher_name": "Chris Wiltshire",
+        "time": "13:00-14:30",
+        "room": "A101"
+      }
+    ],
+    "wed": [
+      {
+        "subject": "Uniformed Protective Services",
+        "teacher_name": "David Hodder",
+        "time": "10:40-12:10",
+        "room": "B21"
+      },
+      {
+        "subject": "Music Tech",
+        "teacher_name": "Chris Wiltshire",
+        "time": "13:00-14:30",
+        "room": "A101"
+      },
+      {
+        "subject": "English GCSE",
+        "teacher_name": "Thomas Patterson",
+        "time": "14:30-16:00",
+        "room": "A109"
+      }
+    ],
+    "thu": [
+      {
+        "subject": "Music Tech",
+        "teacher_name": "Chris Wiltshire",
+        "time": "08:55-10:25",
+        "room": "A101"
+      },
+      {
+        "subject": "Uniformed Protective Services",
+        "teacher_name": "Tracey Poole",
+        "time": "10:40-12:10",
+        "room": "B21"
+      },
+      {
+        "subject": "Uniformed Protective Services",
+        "teacher_name": "Tracey Poole",
+        "time": "14:30-16:00",
+        "room": "B21"
+      }
+    ],
+    "fri": [
+      {
+        "subject": "R.P.E.",
+        "teacher_name": "Aaron Casley",
+        "time": "13:00-14:30",
+        "room": "C106"
+      },
+      {
+        "subject": "Uniformed Protective Services",
+        "teacher_name": "Tracey Poole",
+        "time": "14:30-16:00",
+        "room": "B21"
+      }
+    ]
+  }
+}
