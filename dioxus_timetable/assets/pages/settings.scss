@@ -21,6 +21,8 @@
 }
 
 .color-row {
+  --radius: 5px;
+
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: center;
@@ -58,10 +60,18 @@
   }
 }
 
+.color-row:first-child {
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
+}
+
+.color-row:last-child {
+  border-bottom-left-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+}
+
 .color-row:nth-child(odd) {
   background: var(--mantle);
-  border-radius: 5px;
-
   // & > div > select {
   //   background: var(--surface0);
   // }
