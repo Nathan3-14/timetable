@@ -48,6 +48,7 @@ pub fn LessonEl(lesson: Lesson) -> Element {
 
     let subject_name = match lesson.subject.as_str() {
         "Computer Science" => "C.S.",
+        "Uniformed Protective Services" => "U.P.S.",
         _ => &lesson.subject,
     };
 
