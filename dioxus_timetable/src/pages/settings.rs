@@ -2,19 +2,31 @@ use crate::{mobile_storage::local_storage_path, types::*};
 use dioxus::{logger::tracing, prelude::*};
 use linked_hash_map::LinkedHashMap;
 
-fn load_new_timetable_from_string(new_timetable: String) -> Result<()> {
+fn load_new_timetable_from_string(new_timetable: String) -> anyhow::Result<()> {
     let local_storage_path = crate::mobile_storage::local_storage_path();
     tracing::info!("{}", &local_storage_path.display());
 
     let local_storage = std::fs::read_to_string(&local_storage_path)?;
     let mut local_data: LocalStorage = serde_json::from_str(&local_storage)?;
-    tracing::info!("local: {:?}", local_data);
+    // tracing::info!("local: {:?}", local_data);
     let ids: Vec<String> = local_data.timetables.keys().cloned().collect();
 
-    tracing::info!("new string: {}", new_timetable);
+    // tracing::info!("new string: {}", new_timetable);
 
     let new_timetable_json: Timetable = serde_json::from_str(&new_timetable)?;
-    tracing::info!("new: {:?}", new_timetable_json);
+    // tracing::info!("new: {:?}", new_timetable_json);
+
+    for lessons_vec in new_timetable_json.lessons.clone() {
+        for lesson in lessons_vec {
+            if !new_timetable_json.subjects.contains(&lesson.subject) {
+                return Err(anyhow::anyhow!(
+                    "Lesson `{}` not present in `subjects` array.",
+                    &lesson.subject
+                ));
+            }
+            tracing::info!("lesson {} in subjects array", &lesson.subject);
+        }
+    }
 
     // if Option::is_some(&ids_2.find(|&x| x == new_id.unwrap())) {
     if !ids.contains(&new_timetable_json.id) {
@@ -209,6 +221,7 @@ pub fn SettingsPage() -> Element {
                     }
                 }
             }
+            div { id: "spacer" }
         }
 
         if confirm_clear_popup_showing() {

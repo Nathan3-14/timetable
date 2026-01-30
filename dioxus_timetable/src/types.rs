@@ -19,6 +19,11 @@ pub struct Lessons {
     pub fri: Vec<Lesson>,
 }
 
+pub struct LessonsIterator {
+    collection: Lessons,
+    index: usize,
+}
+
 /// An individual timetable
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Timetable {
@@ -52,5 +57,35 @@ impl Index<usize> for Lessons {
             4 => &self.fri,
             _ => panic!("unknown field: {}", i),
         }
+    }
+}
+
+impl IntoIterator for Lessons {
+    type Item = Vec<Lesson>;
+    type IntoIter = LessonsIterator;
+
+    fn into_iter(self) -> Self::IntoIter {
+        LessonsIterator {
+            collection: self,
+            index: 0,
+        }
+    }
+}
+
+impl Iterator for LessonsIterator {
+    type Item = Vec<Lesson>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let result = match self.index {
+            0 => self.collection.mon.clone(),
+            1 => self.collection.tue.clone(),
+            2 => self.collection.wed.clone(),
+            3 => self.collection.thu.clone(),
+            4 => self.collection.fri.clone(),
+            _ => return None,
+        };
+
+        self.index += 1;
+        Some(result)
     }
 }

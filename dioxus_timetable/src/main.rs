@@ -28,6 +28,7 @@ pub fn capitalise(s: &str) -> String {
 fn main() {
     dioxus::launch(|| {
         rsx! {
+            document::Meta { content: "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" }
             document::Stylesheet { href: asset!("/assets/root.scss") }
             document::Link { rel: "icon", href: "data:," }
             document::Title { "Timetable" }
